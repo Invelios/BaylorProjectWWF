@@ -29,9 +29,9 @@ class Networking
 
     bool changePassword(String oldPass, String newPass);
 
-    int createGame(String user1, String user2);
+    bool createGame(String user1, String user2);
 
-    vector<int> getAllGameID();
+    vector<int> getAllGameID(String user);
 
     vector<int> getActiveGameID();
 

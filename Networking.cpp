@@ -126,7 +126,7 @@ bool Networking::setGameStatus(int gameID, bool status)
 //
 //}
 
-int Networking::getTurn(int gameID)
+bool Networking::getTurn(int gameID)
 {
     bool result = false;
     int get;

@@ -41,7 +41,7 @@ class Networking
 
     // bool updateGame(int gameID, GameObject, turn);
 
-    int getTurn(int gameID);
+    bool getTurn(int gameID);       // Returns True if it is the game creator's turn, and false if it is the other players turn.
 
 }
 

@@ -38,6 +38,9 @@
     <None Include="Brodyquest.WAV">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="background.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameState.h">

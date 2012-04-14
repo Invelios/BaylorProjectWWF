@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="arialbd.ttf" />
+    <None Include="background.png" />
     <None Include="Brodyquest.WAV" />
     <None Include="PongBackground.png" />
   </ItemGroup>

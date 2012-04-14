@@ -21,19 +21,19 @@ class Networking
 
     public:
 
-    bool createAccount(String user, String pass, String email);
+    bool createAccount(string user, string pass, string email);
 
     // User getAllUsers();
 
-    bool login(String user, String pass);
+    bool login(string user, string pass);
 
-    bool changePassword(String oldPass, String newPass);
+    bool changePassword(string oldPass, string newPass);
 
-    bool createGame(String user1, String user2);
+    bool createGame(string user1, string user2);
 
-    vector<int> getAllGameID(String user);
+    vector<int> getAllGameID(string user);
 
-    vector<int> getActiveGameID();
+    vector<int> getActiveGameID(string user);
 
     bool setGameStatus(int gameID, bool status);
 
@@ -43,6 +43,6 @@ class Networking
 
     bool getTurn(int gameID);       // Returns True if it is the game creator's turn, and false if it is the other players turn.
 
-}
+};
 
 #endif // NETWORKING_H_INCLUDED

@@ -7,23 +7,13 @@
 #include "Setup.h"
 //#include "GameState.h"
 #include "GUI.h"
+#include "GameBoard.h"
 
 using namespace std;
 
 int main( int argc, char* args[] )
 {
     bool quit = false;
-    for(int i = 0; i < 15; i++)
-    {
-      for(int j = 0; j < 15; j++)
-      {
-        Grid[i][j] = 0;
-      }
-    }
-    for(int i = 0; i < 7; i++)
-    {
-      Deck[i] = 0;
-    }
 
    // GameState *currentState = NULL;
 
@@ -39,18 +29,15 @@ int main( int argc, char* args[] )
 
    set_clips();
 
-   vector<Tile> allTiles;
-   Tile myTile0(0, 'a');
-   Tile myTile1(1, 'b');
-   Tile myTile2(2, 'c');
-   Tile myTile3(3, 'd');
-   Tile myTile4(4, 'e');
+   GameGUI theGame;
+   theGame.CreateGUITile('F');
+   theGame.CreateGUITile('R');
+   theGame.CreateGUITile('I');
+   theGame.CreateGUITile('E');
+   theGame.CreateGUITile('N');
+   theGame.CreateGUITile('D');
+   theGame.CreateGUITile('S');
 
-   allTiles.push_back(myTile0);
-   allTiles.push_back(myTile1);
-   allTiles.push_back(myTile2);
-   allTiles.push_back(myTile3);
-   allTiles.push_back(myTile4);
    //game loop
 	 while(!quit/*stateID != STATE_EXIT*/)
 	 {
@@ -68,39 +55,11 @@ int main( int argc, char* args[] )
 
         while(SDL_PollEvent(&event)) 
         { 
-          /*if(event.type == SDL_MOUSEBUTTONDOWN) 
-          { 
-          // This should loop over all the sprites available for grabbing 
-            /*for(int i = 0; i < numSprites; i++) 
-            { 
-              if(isInBoundingRegion(event.button.x, event.button.y, mySprites[i])) 
-              dragSprite = mySprites[i]; 
-              else 
-              dragSprite = NULL; 
-            }
-            if(
-          } */
-         /* if(event.type == SDL_MOUSEBUTTONUP) 
-          { 
-            dragSprite = NULL; 
-          } */
-          for(int i = 0; i < allTiles.size(); i++)
-          {
-            allTiles[i].handle_events();
-          }
+          theGame.handle_events();
           if( event.type == SDL_QUIT )
           {
-              //Quit the program
             quit = true;
           } 
-          /*if(event.type == SDL_MOUSEMOTION) 
-          { 
-            if(myTile.isDragged())
-            { /*
-            dragSprite->x += event.motion.xrel; 
-            dragSprite->y += event.motion.yrel;
-            } 
-          } */
         } 
         //Do state logic
         /*currentState->logic();
@@ -110,10 +69,7 @@ int main( int argc, char* args[] )
         
         //Do state rendering*/
         apply_surface(0, 0, background, screen);
-        for(int i = 0; i < allTiles.size(); i++)
-        {
-          allTiles[i].show();
-        }
+        theGame.show();
         //currentState->render();
         
         //Update the screen*/

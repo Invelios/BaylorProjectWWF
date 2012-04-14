@@ -1,91 +1,15 @@
-#ifndef GUI_H
-#define GUI_H
-#include "SDL.h"
-#include "SDL_image.h"
-#include "SDL_ttf.h"
-#include "SDL_mixer.h"
-#include <string>
-#include "GameState.h"
+#ifndef GUI_CPP
+#define GUI_CPP
+/*
+#include "GUI.h"
 #include "Setup.h"
-#include "GameBoard.h"
-#include <vector>
-#include <set>
 
 using namespace std;
 
-class GameGUI;
-class GameBoard;
-
-class GoButton
-{
-public:
-  bool pressed;
-  SDL_Rect box;
-  SDL_Rect * clip;
-  GoButton();
-  GameGUI * theGUI;
-  GoButton(GameGUI*);
-  void handle_events();
-  void show();
-  void flashImage();
-  void resetImage();
-};
-
-class GameGUI
-{
-public:
-  GameBoard * theGameBoard;
-  vector<GUITile> allGUITiles;
-  GoButton * theButton;
-  GameGUI();
-  void CreateGUITile(char letter);
-  void handle_events();
-  void show();
-};
-
-//const SDL_Rect GameGUI::goButton = {384, 544, 64, 32};
-struct Tile
-{
-  pair<int, int> location;
-  char face;
-};
-
-class GUITile
-{
-    private:
-    //The attributes of the button
-    SDL_Rect box;
-    pair<int, int> boardSpace;
-    pair<int, int> previousSpace;
-
-    char face;
-    
-    GameGUI * theGUI;
-    //The part of the button sprite sheet that will be shown
-    SDL_Rect* clip;
-
-    bool dragged;
-    
-    public:
-    //Initialize the variables
-    GUITile(int start, char letter, GameGUI * theGUI);
-    //Handles events and set the button's sprite region
-    void handle_events();
-    //Shows the button on the screen
-    void show();
-    bool isDragged();
-    void placeGUITile(int x, int y);
-    bool getSpace(int x, int y);
-    bool verifySpace();
-    void setCoordinates();
-};
-
 GameGUI::GameGUI()
 {
-  theGameBoard = new GameBoard;
-  theButton = new GoButton(this);
+  theGameBoard->theGUI = this;
 };
-
 
 void GameGUI::CreateGUITile(char letter)
 {
@@ -217,7 +141,7 @@ bool GUITile::verifySpace()
     return true;
   }
   return false;*/
-  return true;
+  /*return true;
 }
 
 void GUITile::placeGUITile(int x, int y)
@@ -266,96 +190,5 @@ void GUITile::setCoordinates()
     box.y = boardSpace.second * TILE_SIZE + SCREEN_TOP_MARGIN;
   }
 }
-
-void GameGUI::handle_events()
-{
-  for(int i = 0; i < allGUITiles.size(); i++)
-  {
-    allGUITiles[i].handle_events();
-  }
-  theButton->handle_events();
-}
-
-void GoButton::handle_events()
-{
-  //The mouse offsets
-    int x = 0, y = 0;
-
-    //If a mouse button was pressed
-    if( event.type == SDL_MOUSEBUTTONDOWN )
-    {
-        //If the left mouse button was pressed
-        if( event.button.button == SDL_BUTTON_LEFT )
-        {
-            //Get the mouse offsets
-            x = event.button.x;
-            y = event.button.y;
-
-            //If the mouse is over the button
-            if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) )
-            {
-                pressed = true;
-                flashImage();
-            }
-        }
-    }
-    //If a mouse button was released
-    if( event.type == SDL_MOUSEBUTTONUP )
-    {
-        //If the left mouse button was released
-        if(pressed && event.button.button == SDL_BUTTON_LEFT)
-        {
-            pressed = false;
-            resetImage();
-            theGUI->theGameBoard->verifyPlay();
-            //GO GO GO!
-        }
-    }
-    //if the GUITile is attached
-    if(pressed && event.type == SDL_MOUSEMOTION)
-    {
-        //Get the mouse offsets
-      if(event.motion.x < 384 || event.motion.x > 480 ||
-         event.motion.y < 544 || event.motion.y > 576)
-      {
-         pressed = false;
-         resetImage();
-      }
-    } 
-}
-
-void GoButton::show()
-{
-    apply_surface( box.x, box.y, TileSheet, screen, clip );
-}
-
-void GameGUI::show()
-{
-  for(int i = 0; i < allGUITiles.size(); i++)
-  {
-    allGUITiles[i].show();
-  }
-  theButton->show();
-}
-
-void GoButton::flashImage()
-{
-  clip = &clips[39];
-}
-
-void GoButton::resetImage()
-{
-  clip = &clips[33];
-}
-
-GoButton::GoButton(GameGUI* aGUI)
-{
-  theGUI = aGUI;
-  pressed = false;
-  box.x = 384;
-  box.y = 544;
-  box.w = 96;
-  box.h = 32;
-  clip = &clips[33];
-}
+*/
 #endif

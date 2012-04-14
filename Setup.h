@@ -14,8 +14,8 @@ const int SCREEN_TOP_MARGIN = 64;
 const int SCREEN_BOTTOM_MARGIN = 32;
 const int SCREEN_BPP = 32;
 const int TILE_SIZE = 32;
-
-const int CLIP_TILE_A = 0;
+const int BOARD_LENGTH = 15;
+const int DECK_SIZE = 7;
 
 SDL_Surface * screen = NULL; //the screen, of course
 SDL_Surface * background = NULL; //black screen, border lines, and middle line
@@ -36,15 +36,23 @@ SDL_Surface *load_image(string filename);
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip);
 void clean_up();
 
-SDL_Rect clips[1];
+SDL_Rect clips[42];
 
 void set_clips()
 {
     //Clip the sprite sheet
-    clips[ CLIP_TILE_A ].x = 32;
-    clips[ CLIP_TILE_A ].y = 0;
-    clips[ CLIP_TILE_A ].w = 32;
-    clips[ CLIP_TILE_A ].h = 32;
+  for(int i = 0; i < 7; i++)
+  {
+    for(int j = 0; j < 6; j++)
+    {
+      clips[6 * i + j].x = 32 * j;
+      clips[6 * i + j].y = 32 * i;
+      clips[6 * i + j].w = 32;
+      clips[6 * i + j].h = 32;
+    }
+  }
+  clips[33].w = 96;
+  clips[39].w = 96;
 }
 
 bool init()
@@ -106,12 +114,12 @@ bool load_files()
     }
 
     //Load the music
-    music = Mix_LoadMUS( "ziggurat.wav" );
+    /*music = Mix_LoadMUS( "ziggurat.wav" );
 
 	 if(music == NULL)
 	 {
 		 return false;
-	 }
+	 }*/
 
     //If everything loaded fine
     return true;

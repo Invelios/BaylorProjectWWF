@@ -15,19 +15,19 @@ using namespace std;
 vector<gameInfo> MenuLogic::getUsersGames(string theUser)
 {
     vector<int> theActiveGameIDs( theNetworkStream.getActiveGameID(theUser) );
-    vector<gameInfo> theGameInfoVector
+    vector<gameInfo> theGameInfoVector;
 
-    for( int i = 0; i < theActiveGameIDs.size(); i++ )
+    /*for( int i = 0; i < theActiveGameIDs.size(); i++ )
     {
         GameObject aGameObject =  theNetworkStream.getGame(theActiveGameIDs[i] ) ;
-        theGameObjectSet.add(aGameObject);
+        theGameObjectSet.insert(aGameObject);
         gameInfo aGameInfo;                                                                     // Will need to edit when Josh finished actual GameObject
         aGameInfo.theGameId = aGameObject.getId();
         aGameInfo.isThePlayersTurn = aGameObject.isThePlayersTurn();
         aGameInfo.theOpponetsName = aGameObject.theOpponetsName();
         aGameInfo.theGameObject = (GameObject*) theGameObjectSet.find(aGameObject);
-        theGameInfoVector.add(aGameInfo);
-    }
+        theGameInfoVector.push_back(aGameInfo);
+    }*/
 
     return theGameInfoVector;
 

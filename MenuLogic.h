@@ -20,7 +20,7 @@ using namespace std;
 struct gameInfo
 {
     int theGameId;
-    boolean isThePlayersTurn;
+    bool isThePlayersTurn;
     string theOpponetsName;
     GameObject *theGameObject;
 };

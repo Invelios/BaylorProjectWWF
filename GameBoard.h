@@ -9,8 +9,10 @@
 #include <set>
 #include "GUI.h"
 
-static const string FILE_NAME = "board.txt";
+static const string EXISTING_FILE_NAME = "board.txt";
+static const string NEW_FILE_NAME = "newboard.txt";
 static const string END_OF_FILE_ERROR = "NUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU";
+static const int ALPHABET_SIZE = 26;
 
 class GameGUI;
 class GUITile;
@@ -55,12 +57,18 @@ class GameBoard
             baseValue = '0';
         }
     };
+    pair<int, char> squareBag[ALPHABET_SIZE];
     Square** theGameBoard;
-    char deck[DECK_SIZE];
+    char deck1[DECK_SIZE], deck2[DECK_SIZE];
     set<pair<int, int>> activeSpots;
     GameBoard::GameBoard()
     {
-      initialize();
+      ifstream inputFile;
+        if(inputFile.open(EXISTING_FILE_NAME))
+            initialize(EXISTING_FILE_NAME);
+        else
+            initialize(NEW_FILE_NAME);
+        inputFile.close();
     }
 
     /*
@@ -74,11 +82,13 @@ class GameBoard
     */
 
 public:
-    void initialize();
+    void initialize(string fileName);
     bool placeSquare(int x, int y, char givenValue);
     bool placeDeckSquare(int x, char givenValue);
     bool removeSquare(pair<int, int> givenPair);
     bool removeDeckSquare(int x);
+    void toString();
+    void update();
 
     //Return integer for multiple failure cases.
     int verifyPlay();
@@ -92,19 +102,14 @@ public:
     //calculateWord
     //Identify Square bonuses and erase if utilized. Replace if undone.
 
-    //toString
-    //The grid and Square placement, player scores, player decks, active player, bag count.
-
-    //update
-    //reconstruct game board from string form.
 };
 
 
-void GameBoard::initialize()
+void GameBoard::initialize(string fileName)
 {
-    char temp, tempSquare, tempBase;
+    /*char temp, tempSquare, tempBase;
     ifstream inputFile;
-    inputFile.open(FILE_NAME.c_str());
+    inputFile.open(fileName.c_str());
         
     this->theGameBoard = new Square*[BOARD_LENGTH];
     for(int i = 0; i < BOARD_LENGTH; i++)
@@ -126,8 +131,43 @@ void GameBoard::initialize()
     }
     for(int i = 0; i < DECK_SIZE; i++)
     {
-      deck[i] = 0;
+      deck1[i] = 0;
+    }*/
+  char temp, tempSquare, tempBase;
+    ifstream inputFile;
+    inputFile.open(fileName.c_str());
+
+    this->theGameBoard = new Square*[BOARD_LENGTH];
+    for(int i = 0; i < BOARD_LENGTH; i++)
+    {
+      theGameBoard[i] = new Square[BOARD_LENGTH];
     }
+    for(int i = 0; i < BOARD_LENGTH; i++)
+    {
+        for(int j = 0; j < BOARD_LENGTH; j++)
+        {
+            if(inputFile.eof())
+                throw(END_OF_FILE_ERROR);
+            inputFile.get(tempSquare);
+            inputFile.get(tempBase);
+            (theGameBoard[i][j]).SquareValue = tempSquare;
+            (theGameBoard[i][j]).baseValue = tempBase;
+        }
+        inputFile.ignore(1, '\n');
+    }
+    for(int i = 0; i < DECK_SIZE; i++)
+        inputFile.get(deck1[i]);
+    inputFile.ignore(1, '\n');
+    for(int i = 0; i < DECK_SIZE; i++)
+        inputFile.get(deck2[i]);
+    for(int i = 0; i < ALPHABET_SIZE; i++)
+    {
+        inputFile >> squareBag[i].first;
+        inputFile.ignore(1, ' ');
+        inputFile.get(squareBag[i].second);
+        inputFile.ignore(1, ' ');
+    }
+    inputFile.close();
 }
 
 bool GameBoard::placeSquare(int x, int y, char givenValue)
@@ -145,9 +185,9 @@ bool GameBoard::placeSquare(int x, int y, char givenValue)
 
 bool GameBoard::placeDeckSquare(int x, char givenValue)
 {
-  if(deck[x] == 0)
+  if(deck1[x] == 0)
   {
-    deck[x] = givenValue;
+    deck1[x] = givenValue;
     return true;
   }
   return false;
@@ -168,7 +208,7 @@ bool GameBoard::removeSquare(pair<int, int> givenPair)
 
 bool GameBoard::removeDeckSquare(int x)
 {
-  this->deck[x] = 0;
+  this->deck1[x] = 0;
   return true;
 }
 
@@ -249,15 +289,40 @@ bool GameBoard::checkSpots(set<pair<int, int>>::iterator it)
   }
   return valid;
 }
- /* it = activeSpots.begin();
-  ////Must be adjacent to an already-existing Square, or the Origin Spot.
-  if(orientation)//vertical
-  {
 
-  }
-  else //horizontal
-  {//first check around the first dude
-    //if(theGameBoard[
-  }*/
+void GameBoard::toString()//Square** theGameBoard, char deck1[], char deck2[])
+{
+    ofstream outputFile;
+    outputFile.open(EXISTING_FILE_NAME.c_str());
+    outputFile.clear();
+    for(int i = 0; i < BOARD_LENGTH; i++)
+    {
+        for(int j = 0; j < BOARD_LENGTH; j++)
+        {
+            outputFile << theGameBoard[i][j].SquareValue;
+            outputFile << theGameBoard[i][j].baseValue;
+        }
+        outputFile << '\n';
+    }
+    for(int i = 0; i < DECK_SIZE; i++)
+        outputFile << deck1[i];
+    outputFile << '\n';
+    for(int i = 0; i < DECK_SIZE; i++)
+        outputFile << deck2[i];
+    for(int i = 0; i < ALPHABET_SIZE; i++)
+    {
+        outputFile << squareBag[i].first << ' ' << squareBag[i].second << ' ';
+    }
+
+}
+
+void update()
+{
+    ifstream inputFile;
+
+    if(inputFile.open(EXISTING_FILE_NAME))
+        initialize(EXISTING_FILE_NAME);
+    inputFile.close();
+}
 
 #endif // GAMEBOARD_H_INCLUDED

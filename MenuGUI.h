@@ -8,6 +8,7 @@
 #include "GameState.h"
 #include "Setup.h"
 #include "GameBoard.h"
+#include "MenuLogic.h"
 #include <vector>
 #include <set>
 #include <string>
@@ -18,21 +19,21 @@ class GameIcon
 {
 private:
     SDL_Rect box;
-    GameInfo theGameInfo;
+    gameInfo theGameInfo;
     int theGameNumber;
 
     //The part of the button sprite sheet that will be shown
     SDL_Rect* clip;
     
 public:
-    GameIcon(GameInfo aGameInfo, int aGameNumber);
+    GameIcon(gameInfo aGameInfo, int aGameNumber);
 
     void handle_events();
 
     void show();
 };
 
-GameIcon::GameIcon(GameInfo aGameInfo, int aGameNumber)
+GameIcon::GameIcon(gameInfo aGameInfo, int aGameNumber)
 {
   theGameInfo = aGameInfo;
   theGameNumber = aGameNumber;
@@ -43,19 +44,20 @@ class MenuGUI
 {
   vector<GameIcon> theGameSet;
   MenuGUI();
-  void createGameIcon(GameInfo aGameInfo, int aGameNumber);
+  MenuLogic * theLogic;
+  void createGameIcon(gameInfo aGameInfo, int aGameNumber);
 };
 
 MenuGUI::MenuGUI(string userName)
 {
-  vector<GameInfo> gameInfoSet = getUsersGames(userName);
+  vector<gameInfo> gameInfoSet = theLogic->getUsersGames(userName);
   for(int i = 0; i < gameInfoSet.size(); i++)
   {
     createGameIcon(gameInfoSet[i], i);
   }
 }
 
-void MenuGUI::createGameIcon(GameInfo aGameInfo, int aGameNumber)
+void MenuGUI::createGameIcon(gameInfo aGameInfo, int aGameNumber)
 {
   theGameSet.push(aGameInfo, aGameNumber);
 }

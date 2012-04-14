@@ -93,10 +93,10 @@ void GameGUI::CreateGUITile(char letter)
   int start;
   for(int i = 0; i < DECK_SIZE; i++)
   {
-    if(theGameBoard->deck[i] == 0)
+    if(theGameBoard->deck1[i] == 0)
     {
       newGUITile = new GUITile(i, letter, this);
-      theGameBoard->deck[i] = letter;
+      theGameBoard->deck1[i] = letter;
       break;
     }
   }
@@ -207,7 +207,7 @@ bool GUITile::verifySpace()
 {/*
   if(boardSpace.second == -1)
   {
-    if(Deck[boardSpace.first] == 0)
+    if(deck1[boardSpace.first] == 0)
     {
       return true;
     }

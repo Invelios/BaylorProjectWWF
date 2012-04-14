@@ -21,6 +21,9 @@
     <ClCompile Include="Dictionary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GameBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,6 +39,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Brodyquest.WAV">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="board.txt">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -55,7 +61,7 @@
     <ClInclude Include="GameBoard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MenuGUI.h">
+    <ClInclude Include="Wwf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

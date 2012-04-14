@@ -23,7 +23,7 @@ class Networking
 
     bool createAccount(string user, string pass, string email);
 
-    // User getAllUsers();
+    // string getAllUsers();
 
     bool login(string user, string pass);
 

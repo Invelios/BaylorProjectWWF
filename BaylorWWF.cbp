@@ -31,13 +31,21 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="..\..\Dropbox\words with friends\ChrisCode\DictionaryClass\dictionaryTestDriver.cpp" />
 		<Unit filename="Dictionary.cpp" />
 		<Unit filename="Dictionary.h" />
+		<Unit filename="GUI.cpp" />
+		<Unit filename="GUI.h" />
+		<Unit filename="GameBoard.cpp" />
+		<Unit filename="GameBoard.h" />
+		<Unit filename="GameState.h" />
+		<Unit filename="MenuGUI.h" />
 		<Unit filename="Networking.cpp" />
 		<Unit filename="Networking.h" />
+		<Unit filename="Setup.h" />
+		<Unit filename="TestMain.cpp" />
 		<Unit filename="Wwf.cpp" />
 		<Unit filename="Wwf.h" />
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

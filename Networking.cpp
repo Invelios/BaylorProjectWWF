@@ -6,14 +6,15 @@
 // Implements Networking Class Functions
 
 #include "Networking.h"
-#include <String>
+#include <string>
+#include <cstdlib>
 
 using namespace std;
 
-bool Networking::createAccount(String user, String pass, String email)
+bool Networking::createAccount(string user, string pass, string email)
 {
     bool result = false;
-    String command = "command=createAccount&user=" + user + "&password=" + pass + "&email=" + email;
+    string command = "command=createAccount&user=" + user + "&password=" + pass + "&email=" + email;
     net << command;
     net >> command;
 
@@ -28,10 +29,10 @@ bool Networking::createAccount(String user, String pass, String email)
 //
 //}
 
-bool Networking::login(String user, String pass)
+bool Networking::login(string user, string pass)
 {
     bool result = false;
-    String command = "command=login&user=" + user + "&password=" + pass;
+    string command = "command=login&user=" + user + "&password=" + pass;
     net << command;
     net >> command;
 
@@ -41,10 +42,10 @@ bool Networking::login(String user, String pass)
     return result;
 }
 
-bool Networking::changePassword(String oldPass, String newPass)
+bool Networking::changePassword(string oldPass, string newPass)
 {
     bool result = false;
-    String command = "command=changePassword&user=" + oldPass + "&oldPW=OldPassword&newPW=" + newPass;
+    string command = "command=changePassword&user=" + oldPass + "&oldPW=OldPassword&newPW=" + newPass;
     net << command;
     net >> command;
 
@@ -54,10 +55,10 @@ bool Networking::changePassword(String oldPass, String newPass)
     return result;
 }
 
-bool Networking::createGame(String user1, String user2)
+bool Networking::createGame(string user1, string user2)
 {
     bool result = false;
-    String command = "command=createGame&" + user1 + "=name&user2=" + user2;
+    string command = "command=createGame&" + user1 + "=name&user2=" + user2;
     net << command;
     net >> command;
 
@@ -67,31 +68,35 @@ bool Networking::createGame(String user1, String user2)
     return result;
 }
 
-vector<int> Networking::getAllGameID(String user)
+vector<int> Networking::getAllGameID(string user)
 {
     vector<int> data;
-    int get;
-    String command = "command=getAllGameID&user=" + user;
+    string get;
+    int getInt;
+    string command = "command=getAllGameID&user=" + user;
     net << command;
 
     while(net >> get)
     {
-        data.push_back(get);
+        getInt = atoi(get.c_str());
+        data.push_back(getInt);
     }
 
     return data;
 }
 
-vector<int> Networking::getActiveGameID()
+vector<int> Networking::getActiveGameID(string user)
 {
     vector<int> data;
-    int get;
-    String command = "command=getActiveGameID&user=" + user;
+    string get;
+    int getInt;
+    string command = "command=getActiveGameID&user=" + user;
     net << command;
 
     while(net >> get)
     {
-        data.push_back(get);
+        getInt = atoi(get.c_str());
+        data.push_back(getInt);
     }
 
     return data;
@@ -100,7 +105,8 @@ vector<int> Networking::getActiveGameID()
 bool Networking::setGameStatus(int gameID, bool status)
 {
     bool result = false;
-    String command = "command=setGameStatus&" + gameID + "=ID&status=";
+    string command = "command=setGameStatus&" + gameID;
+    command += "=ID&status=";
 
     if(status)
         command += "ACTIVE";
@@ -129,12 +135,14 @@ bool Networking::setGameStatus(int gameID, bool status)
 bool Networking::getTurn(int gameID)
 {
     bool result = false;
-    int get;
-    String command = " command=getTurn&gameID=" + gameID;
+    int getInt;
+    string get;
+    string command = " command=getTurn&gameID=" + gameID;
     net << command;
     net >> get;
+    getInt = atoi(get.c_str());
 
-    if(get == 1)
+    if(getInt == 1)
         result = true;
 
     return result;

@@ -31,6 +31,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="..\..\Dropbox\words with friends\ChrisCode\DictionaryClass\dictionaryTestDriver.cpp" />
+		<Unit filename="Dictionary.cpp" />
+		<Unit filename="Dictionary.h" />
+		<Unit filename="Networking.cpp" />
+		<Unit filename="Networking.h" />
+		<Unit filename="Wwf.cpp" />
+		<Unit filename="Wwf.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

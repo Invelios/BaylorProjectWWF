@@ -82,7 +82,7 @@ class GUITile
 
 GameGUI::GameGUI()
 {
-  theGameBoard = new GameBoard;
+  theGameBoard = new GameBoard();
   theButton = new GoButton(this);
 };
 

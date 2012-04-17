@@ -10,10 +10,11 @@
 #define MENULOGIC_H_INCLUDED
 
 #include "Networking.h"
+#include "GUI.h"
 #include <string>
 #include <set>
 #include <vector>
-// #include <GameObject>
+// #include <GameBoard>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ struct gameInfo
     int theGameId;
     bool isThePlayersTurn;
     string theOpponetsName;
-    GameObject *theGameObject;
+    GameBoard *theGameBoard;
 };
 
 class MenuLogic
@@ -30,7 +31,7 @@ class MenuLogic
     private:
 
     Networking theNetworkStream;
-    set<GameObject> theGameObjectSet;
+    set<GameBoard> theGameBoardSet;
 
     public:
 

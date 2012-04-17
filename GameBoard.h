@@ -13,7 +13,7 @@
 static const string NEW_FILE_NAME = "newboard.txt";
 static const string END_OF_FILE_ERROR = "NUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU";
 static const int ALPHABET_SIZE = 26;
-static const string CREATOR = "alfred hitchcock";
+static const string USER_NAME = "alfred hitchcock";
 
 class GameGUI;
 class GUITile;
@@ -58,7 +58,7 @@ class GameBoard
             baseValue = '0';
         }
     };
-    pair<int, char> squareBag[ALPHABET_SIZE];
+    multiset<char> squareBag;
     Square theGameBoard[BOARD_LENGTH][BOARD_LENGTH];
     char deck1[DECK_SIZE], deck2[DECK_SIZE];
     set<pair<int, int>> activeSpots;
@@ -163,14 +163,11 @@ void GameBoard::initialize()
   for(int i = 0; i < DECK_SIZE; i++)
       inputFile.get(deck2[i]);*/
   inputFile.ignore(1, '\n');
-  for(int i = 0; i < ALPHABET_SIZE; i++)
+  while(!inputFile.eof())
   {
-      inputFile >> squareBag[i].first;
-      inputFile.ignore(1, ' ');
-      inputFile.get(squareBag[i].second);
-      inputFile.ignore(1, ' ');
+      squareBag.insert(inputFile.get());
   }
-  creator = CREATOR;
+  creator = USER_NAME;
   inputFile.close();
 }
 
@@ -312,9 +309,10 @@ string GameBoard::toString()//Square** theGameBoard, char deck1[], char deck2[])
  // stringOut << '\n';
   for(int i = 0; i < DECK_SIZE; i++)
       stringOut << deck2[i];
-  for(int i = 0; i < ALPHABET_SIZE; i++)
+  multiset<char>::iterator it;
+  for(it = squareBag.begin(); it != squareBag.end(); it++)
   {
-      stringOut << squareBag[i].first << squareBag[i].second << ' ';
+      stringOut << (*it);
   }
 
   return stringOut.str();
@@ -346,9 +344,10 @@ void GameBoard::retrieveGame(string boardString)
 {
   char temp, tempSquare, tempBase;
   string tempCreator = 0;
-  for(int i = 0; boardString[i] != '\n'; i++)
+  int s = 0;
+  for(; boardString[s] != '\n'; s++)
   {
-    tempCreator += boardString[i];
+    tempCreator += boardString[s];
   }
   creator = tempCreator;
 
@@ -356,29 +355,28 @@ void GameBoard::retrieveGame(string boardString)
   {
       for(int j = 0; j < BOARD_LENGTH; j++)
       {
-          /*if(inputFile.eof())
-              throw(END_OF_FILE_ERROR);*/
-          inputFile.get(tempSquare);
-          inputFile.get(tempBase);
-          (theGameBoard[i][j]).SquareValue = tempSquare;
-          (theGameBoard[i][j]).baseValue = tempBase;
+          (theGameBoard[i][j]).SquareValue = boardString[s];
+          s++;
+          (theGameBoard[i][j]).baseValue = boardString[s];
+          s++;
       }
-      inputFile.ignore(1, '\n');
   }
-  /*for(int i = 0; i < DECK_SIZE; i++)
-      inputFile.get(deck1[i]);
-  inputFile.ignore(1, '\n');
   for(int i = 0; i < DECK_SIZE; i++)
-      inputFile.get(deck2[i]);*/
-  inputFile.ignore(1, '\n');
-  for(int i = 0; i < ALPHABET_SIZE; i++)
   {
-      inputFile >> squareBag[i].first;
-      inputFile.ignore(1, ' ');
-      inputFile.get(squareBag[i].second);
-      inputFile.ignore(1, ' ');
+    deck1[i] = boardString[s];
+    s++;
   }
-  inputFile.close();
+  for(int i = 0; i < DECK_SIZE; i++)
+  {
+      deck2[i] = boardString[s];
+      s++;
+  }
+  while(s < boardString.size())
+  {
+      squareBag.insert(boardString[s]);
+      s++;
+  }
+
     /*ifstream inputFile;
 
     if(inputFile.open(EXISTING_FILE_NAME))

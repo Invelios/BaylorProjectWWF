@@ -8,6 +8,7 @@
 //#include "GameState.h"
 #include "GUI.h"
 #include "GameBoard.h"
+#include "LoginMenuGUI.h"
 
 using namespace std;
 
@@ -28,6 +29,8 @@ int main( int argc, char* args[] )
 	 }
 
    set_clips();
+
+   string userName = loginScreenLoop();
 
    GameGUI theGame;
    theGame.CreateGUITile('F');

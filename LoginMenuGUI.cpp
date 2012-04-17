@@ -1,42 +1,8 @@
-#ifndef LOGINMENUGUI_H
-#define LOGINMENUGUI_H
-#include <iostream>
-#include <string>
-#include "Setup.h"
-
-using namespace std;
+/*#include "LoginMenuGUI.h"
 
 const int USER_NAME_MAX_LENGTH = 20;
-
-
-string loginScreenLoop();
-
-class StringInput
-{
-    private:
-    //The storage string
-    string str;
-    
-    //The text surface
-    SDL_Surface *text;
-    
-    public:
-    //Initializes variables
-    StringInput();
-    
-    //Does clean up
-    ~StringInput();
-
-    string getStr();
-    
-    //Handles input
-    void handle_input();
-    
-    //Shows the message on screen
-    void show_centered();    
-};
-
-#include "LoginMenuGUI.h"
+SDL_Surface * requestName = NULL;
+SDL_Surface * loginBackground = NULL;
 
 StringInput::StringInput()
 {
@@ -117,36 +83,18 @@ void StringInput::show_centered()
     }
 }
 
-string StringInput::getStr()
+int loginScreenLoop()
 {
-  return str;
-}
-
-string loginScreenLoop()
-{
-  SDL_Surface * requestName = NULL;
-  SDL_Surface * loginBackground = NULL;
-  SDL_Surface * requestPass = NULL;
-  SDL_Surface * incorrectCombo = NULL;
-
   bool nameEntered = false;
-  bool passEntered = false;
   bool quit = false;
-  bool state = 0; //0 = username, 1 = password
-  bool incorrect = 0; //1 to notify user of incorrect password
   StringInput name;
-  StringInput password;
   requestName = TTF_RenderText_Solid( font, "Enter User Name:", textColor );
-  requestPass = TTF_RenderText_Solid(font, "Enter Password:", textColor);
-  incorrectCombo = TTF_RenderText_Solid(font, "Incorrect combination; please try again:", textColor);
 
-  loginBackground = load_image("loginbackground.png");
+  loginBackground = load_image("titleBackground.png");
 
   //While the user hasn't quit
-    while( quit == false && !(nameEntered == true && passEntered == true))
+    while( quit == false )
     {
-      if(state == 0)
-      {
         //While there's events to handle
         while( SDL_PollEvent( &event ) )
         {
@@ -161,7 +109,9 @@ string loginScreenLoop()
                 {
                     //Change the flag
                     nameEntered = true;
-                    state = 1;
+                        
+                    //Free the old message surface
+                    SDL_FreeSurface(requestName);
                 }
             }
             
@@ -173,58 +123,18 @@ string loginScreenLoop()
             }
         }
         //Apply the background
-        apply_surface( 0, 0, loginBackground, screen );
+        apply_surface( 0, 0, background, screen );
 
         //Show the message
         apply_surface( ( SCREEN_WIDTH - requestName->w ) / 2, ( ( SCREEN_HEIGHT / 2 ) - requestName->h ) / 2, requestName, screen );
         
         //Show the name on the screen
         name.show_centered();
-      }
-      else
-      {
-        while( SDL_PollEvent( &event ) )
-        {
-            //If the user hasn't entered their name yet
-            if( passEntered == false )
-            {
-                //Get user input
-                password.handle_input();
-                
-                //If the enter key was pressed
-                if( ( event.type == SDL_KEYDOWN ) && ( event.key.keysym.sym == SDLK_RETURN ) )
-                {
-                    //Change the flag
-                    passEntered = true;
-                }
-            }
-            
-            //If the user has Xed out the window
-            if( event.type == SDL_QUIT )
-            {
-                //Quit the program
-                quit = true;
-            }
-        }
-        //Apply the background
-        apply_surface( 0, 0, loginBackground, screen );
-
-        //Show the message
-        apply_surface( ( SCREEN_WIDTH - requestPass->w ) / 2, ( ( SCREEN_HEIGHT / 2 ) - requestPass->h ) / 2, requestPass, screen );
         
-        //Show the name on the screen
-        password.show_centered();
-      }
-      //Update the screen
-      if( SDL_Flip( screen ) == -1 )
-      {
-          throw "screen flip fail";
-      }
+        //Update the screen
+        if( SDL_Flip( screen ) == -1 )
+        {
+            return 1;    
+        }
     }
-
-    SDL_FreeSurface(requestName);
-    SDL_FreeSurface(requestPass);
-    return name.getStr();
-}
-
-#endif
+}*/

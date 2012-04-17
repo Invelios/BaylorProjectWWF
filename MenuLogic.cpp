@@ -5,10 +5,7 @@
     Modified on:        By:
         4/13/12             Christopher Scoggins
 */
-
-#include "MenuLogic.h"
-#include <set>
-#include <string>
+/*#include "MenuLogic.h"
 
 using namespace std;
 
@@ -17,7 +14,7 @@ vector<gameInfo> MenuLogic::getUsersGames(string theUser)
     vector<int> theActiveGameIDs( theNetworkStream.getActiveGameID(theUser) );
     vector<gameInfo> theGameInfoVector;
 
-    /*for( int i = 0; i < theActiveGameIDs.size(); i++ )
+    for( int i = 0; i < theActiveGameIDs.size(); i++ )
     {
         GameObject aGameObject =  theNetworkStream.getGame(theActiveGameIDs[i] ) ;
         theGameObjectSet.insert(aGameObject);
@@ -27,9 +24,10 @@ vector<gameInfo> MenuLogic::getUsersGames(string theUser)
         aGameInfo.theOpponetsName = aGameObject.theOpponetsName();
         aGameInfo.theGameObject = (GameObject*) theGameObjectSet.find(aGameObject);
         theGameInfoVector.push_back(aGameInfo);
-    }*/
+    }
 
     return theGameInfoVector;
 
 }
 
+*/

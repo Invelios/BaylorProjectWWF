@@ -122,9 +122,8 @@ bool Networking::setGameStatus(int gameID, bool status)
     return result;
 }
 
-// GameObject Networking::getGame(int gameID)
+//GameObject Networking::getGame(int gameID)
 //{
-//
 //}
 
 // bool Networking::updateGame(int gameID, GameObject, turn)

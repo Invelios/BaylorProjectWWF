@@ -38,6 +38,7 @@ using namespace std;
   typedef char raw_type;       // Type used for raw data on this platform
 #else
   #include <sys/types.h>       // For data types
+  #include <process.h>
   #include <sys/socket.h>      // For socket(), connect(), send(), and recv()
   #include <netdb.h>           // For gethostbyname()
   #include <arpa/inet.h>       // For inet_addr()

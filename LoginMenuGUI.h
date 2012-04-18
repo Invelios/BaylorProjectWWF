@@ -3,11 +3,11 @@
 #include <iostream>
 #include <string>
 #include "Setup.h"
+#include "Networking.h"
 
 using namespace std;
 
 const int USER_NAME_MAX_LENGTH = 20;
-
 
 string loginScreenLoop();
 
@@ -34,6 +34,8 @@ class StringInput
     
     //Shows the message on screen
     void show_centered();    
+
+    void reset();
 };
 
 #include "LoginMenuGUI.h"
@@ -122,8 +124,15 @@ string StringInput::getStr()
   return str;
 }
 
+void StringInput::reset()
+{
+  text = NULL;
+  str = "";
+}
+
 string loginScreenLoop()
 {
+  Networking theNetwork;
   SDL_Surface * requestName = NULL;
   SDL_Surface * loginBackground = NULL;
   SDL_Surface * requestPass = NULL;
@@ -134,6 +143,7 @@ string loginScreenLoop()
   bool quit = false;
   bool state = 0; //0 = username, 1 = password
   bool incorrect = 0; //1 to notify user of incorrect password
+  bool goodPass = 1; //1 for no error, 0 for error
   StringInput name;
   StringInput password;
   requestName = TTF_RenderText_Solid( font, "Enter User Name:", textColor );
@@ -196,6 +206,15 @@ string loginScreenLoop()
                 {
                     //Change the flag
                     passEntered = true;
+                    goodPass = theNetwork.login(name.getStr(), password.getStr());
+                    if(goodPass == false)
+                    {
+                      passEntered = false;
+                      nameEntered = false;
+                      state = 0;
+                      name.reset();
+                      password.reset();
+                    }
                 }
             }
             
@@ -215,6 +234,12 @@ string loginScreenLoop()
         //Show the name on the screen
         password.show_centered();
       }
+
+      if(goodPass == false)
+      {
+        apply_surface((SCREEN_WIDTH - incorrectCombo->w) / 2, ((SCREEN_HEIGHT / 2) - incorrectCombo->h) / 2 - incorrectCombo->h, incorrectCombo, screen);
+      }
+
       //Update the screen
       if( SDL_Flip( screen ) == -1 )
       {
@@ -222,8 +247,10 @@ string loginScreenLoop()
       }
     }
 
+
     SDL_FreeSurface(requestName);
     SDL_FreeSurface(requestPass);
+    SDL_FreeSurface(incorrectCombo);
     return name.getStr();
 }
 

@@ -1,15 +1,17 @@
 // Title    : Networking Implementation
 // Author   : Christopher Scoggins
 // Created  : 3/30/12
-// Last Mod : 3/30/12
+// Last Mod : 4/20/12
 //
 // Implements Networking Class Functions
 
 #ifndef NETWORKING_H_INCLUDED
 #define NETWORKING_H_INCLUDED
 
+#include "GameBoard.h"
 #include "Wwf.h"
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -23,7 +25,7 @@ class Networking
 
     bool createAccount(string user, string pass, string email);
 
-    // string getAllUsers();
+    vector<string> getAllUsers();
 
     bool login(string user, string pass);
 
@@ -37,11 +39,9 @@ class Networking
 
     bool setGameStatus(int gameID, bool status);
 
-    // GameObject getGame(int gameID);
+    GameBoard getGame(int gameID);
 
-    // bool updateGame(int gameID, GameObject, turn);
-
-    bool getTurn(int gameID);       // Returns True if it is the game creator's turn, and false if it is the other players turn.
+    bool updateGame(int gameID, GameBoard);
 
 };
 

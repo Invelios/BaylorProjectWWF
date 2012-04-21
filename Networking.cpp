@@ -132,14 +132,14 @@ bool Networking::setGameStatus(int gameID, bool status)
     return result;
 }
 
-GameBoard Networking::getGame(int gameID)
+string Networking::getGame(int gameID)
 {
     string command = "command=getGame&gameID=" + gameID;
 
     net << command;
     net >> command;
 
-    return GameBoard(command);
+    return command;
 }
 
  bool Networking::updateGame(int gameID, GameBoard aGameBoard)

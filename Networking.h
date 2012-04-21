@@ -39,7 +39,7 @@ class Networking
 
     bool setGameStatus(int gameID, bool status);
 
-    GameBoard getGame(int gameID);
+    string getGame(int gameID);
 
     bool updateGame(int gameID, GameBoard);
 

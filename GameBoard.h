@@ -37,7 +37,7 @@ public:
 const SDL_Rect GameGUI::goButton = {384, 544, 64, 32};*/
 
 class GameBoard
-{   
+{
   friend class GUITile;
   friend class GameGUI;
     class Square
@@ -88,6 +88,8 @@ public:
     string GameBoard::toString();
     void update();
 
+    vector<pair<int,int> > cheat();
+
     //Return integer for multiple failure cases.
     int verifyPlay();
     bool checkSpots(set<pair<int, int>>::iterator it);
@@ -117,7 +119,7 @@ void GameBoard::initialize()
     /*char temp, tempSquare, tempBase;
     ifstream inputFile;
     inputFile.open(fileName.c_str());
-        
+
     this->theGameBoard = new Square*[BOARD_LENGTH];
     for(int i = 0; i < BOARD_LENGTH; i++)
     {
@@ -382,6 +384,11 @@ void GameBoard::retrieveGame(string boardString)
     if(inputFile.open(EXISTING_FILE_NAME))
         initialize(EXISTING_FILE_NAME);
     inputFile.close();*/
+}
+
+vector<pair<int,int> > GameBoard::cheat()
+{
+
 }
 
 #endif // GAMEBOARD_H_INCLUDED

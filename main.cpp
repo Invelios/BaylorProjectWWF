@@ -7,8 +7,9 @@
 #include "Setup.h"
 //#include "GameState.h"
 #include "GUI.h"
-#include "GameBoard.h"
 #include "LoginMenuGUI.h"
+#include "Networking.h"
+#include "FirstMenuGUI.h"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ int main( int argc, char* args[] )
 	 }
 
    set_clips();
-
+   string blah = mainScreenLoop();
    string userName = loginScreenLoop();
 
    GameGUI theGame;

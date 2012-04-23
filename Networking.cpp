@@ -4,7 +4,7 @@
 // Last Mod : 4/20/12
 //
 // Implements Networking Class Functions
-
+/*
 #include "Networking.h"
 #include "GameBoard.h"
 #include <string>
@@ -36,7 +36,7 @@ vector<string> Networking::getAllUsers()
         theUserVector.push_back(command);
     }
 
-    return theUserVector
+    return theUserVector;
 }
 
 bool Networking::login(string user, string pass)
@@ -132,20 +132,21 @@ bool Networking::setGameStatus(int gameID, bool status)
     return result;
 }
 
-GameBoard Networking::getGame(int gameID)
+GameBoard * Networking::getGame(int gameID)
 {
     string command = "command=getGame&gameID=" + gameID;
 
     net << command;
     net >> command;
 
-    return GameBoard(command);
+    return  new GameBoard(command);
 }
 
  bool Networking::updateGame(int gameID, GameBoard aGameBoard)
 {
     bool result = false;
-    string command = "command=updateGame&gameID=" + gameID + "&gameObject=" + aGameBoard.toString();
+    string command = "command=updateGame&gameID=" + gameID + '&';
+    command = command + "gameObject=" + aGameBoard.toString();
 
     net << command;
     net >> command;
@@ -155,3 +156,4 @@ GameBoard Networking::getGame(int gameID)
 
     return result;
 }
+*/

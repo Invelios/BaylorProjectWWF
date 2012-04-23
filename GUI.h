@@ -15,6 +15,7 @@ using namespace std;
 
 class GameGUI;
 class GameBoard;
+class GUITile;
 
 class GoButton
 {

@@ -8,7 +8,6 @@
 #include <sstream>
 #include "Setup.h"
 #include <set>
-#include "GUI.h"
 
 static const string NEW_FILE_NAME = "newboard.txt";
 static const string END_OF_FILE_ERROR = "NUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU";
@@ -64,9 +63,6 @@ class GameBoard
     set<pair<int, int>> activeSpots;
     string creator; //which player made it?
     string turn; //whose turn is it?
-    GameBoard(); // new game
-
-    GameBoard(string boardString);// retrieving existing game
 
     /*
     baseValue:
@@ -79,6 +75,8 @@ class GameBoard
     */
 
 public:
+    GameBoard(); // new game
+    GameBoard(string boardString);// retrieving existing game
     void initialize();
     void retrieveGame(string boardString);
     bool placeSquare(int x, int y, char givenValue);

@@ -10,27 +10,7 @@ using namespace std;
 
 string loginScreenLoop()
 {
-  Networking theNetwork;
-  SDL_Surface * requestName = NULL;
-  SDL_Surface * loginBackground = NULL;
-  SDL_Surface * requestPass = NULL;
-  SDL_Surface * incorrectCombo = NULL;
-
-  bool nameEntered = false;
-  bool passEntered = false;
-  bool quit = false;
-  bool state = 0; //0 = username, 1 = password
-  bool incorrect = 0; //1 to notify user of incorrect password
-  bool goodPass = 1; //1 for no error, 0 for error
-  StringInput name;
-  StringInput password;
-  requestName = TTF_RenderText_Solid( font, "Enter User Name:", textColor );
-  requestPass = TTF_RenderText_Solid(font, "Enter Password:", textColor);
-  incorrectCombo = TTF_RenderText_Solid(font, "Incorrect combination; please try again:", textColor);
-
-  loginBackground = load_image("loginbackground.png");
-
-  //While the user hasn't quit
+  /*//While the user hasn't quit
     while( quit == false && !(nameEntered == true && passEntered == true))
     {
       if(state == 0)
@@ -129,7 +109,8 @@ string loginScreenLoop()
     SDL_FreeSurface(requestName);
     SDL_FreeSurface(requestPass);
     SDL_FreeSurface(incorrectCombo);
-    return name.getStr();
+    return name.getStr();*/
+    return "lol";
 }
 
 #endif

@@ -4,32 +4,27 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include "SDL_mixer.h"
+#include "Globals.h"
 #include <string>
 
 using namespace std;
 
+SDL_Event event;
+
+const int SCREEN_BPP = 32;
 const int SCREEN_WIDTH = 480;
 const int SCREEN_HEIGHT = 576;
-const int SCREEN_TOP_MARGIN = 64;
-const int SCREEN_BOTTOM_MARGIN = 32;
-const int SCREEN_BPP = 32;
-const int TILE_SIZE = 32;
-const int BOARD_LENGTH = 15;
-const int DECK_SIZE = 7;
-const int USER_NAME_MAX_LENGTH = 20;
-
-SDL_Surface * screen = NULL; //the screen, of course
-SDL_Surface * background = NULL; //black screen, border lines, and middle line
-SDL_Surface * TileSheet = NULL;
-SDL_Surface * menuTiles = NULL;
-
-SDL_Event event;
 
 TTF_Font *font = NULL;
 SDL_Color textColor = { 0, 0, 0 };
 
 Mix_Music *music = NULL;
 Mix_Chunk *scratch = NULL;
+
+SDL_Surface * screen = NULL; //the screen, of course
+SDL_Surface * background = NULL; //black screen, border lines, and middle line
+SDL_Surface * TileSheet = NULL;
+SDL_Surface * menuTiles = NULL;
 
 void set_clips();
 bool init();

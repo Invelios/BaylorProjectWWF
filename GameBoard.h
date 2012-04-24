@@ -15,10 +15,18 @@
 #include "Setup.h"
 #include <set>
 
+using namespace std;
+
 static const string NEW_FILE_NAME = "newboard.txt";
 static const string END_OF_FILE_ERROR = "NUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU";
 static const int ALPHABET_SIZE = 26;
 static const string USER_NAME = "alfred hitchcock";
+const int TILE_SIZE = 32;
+const int BOARD_LENGTH = 15;
+const int DECK_SIZE = 7;
+const int USER_NAME_MAX_LENGTH = 20;
+const int SCREEN_TOP_MARGIN = 64;
+const int SCREEN_BOTTOM_MARGIN = 32;
 
 class GameGUI;
 class GUITile;
@@ -77,7 +85,7 @@ struct MoveMapping
     vector< Move > theMoves;
     int theScore;
 
-    bool operator<(MoveMapping anotherMoveMapping);
+    bool operator<(MoveMapping anotherMoveMapping)
     {
         return theScore < anotherMoveMapping.theScore;
     }
@@ -92,7 +100,7 @@ struct maxScoreFirst
     {
         return firstMoveMapping.theScore > secondMoveMapping.theScore;
     }
-}
+};
 
 
 class GameBoard

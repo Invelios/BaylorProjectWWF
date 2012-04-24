@@ -10,95 +10,123 @@
 #include "LoginMenuGUI.h"
 #include "Networking.h"
 #include "FirstMenuGUI.h"
+#include "Timer.h"
 
 using namespace std;
 
+const int FRAMES_PER_SECOND = 30;
+
 int main( int argc, char* args[] )
 {
-    bool quit = false;
+  bool quit = false;
 
-   // GameState *currentState = NULL;
+  // GameState *currentState = NULL;
 
-    if(init() == false)
-	 {
-		 return 1;
-	 }
+  if(init() == false)
+  {
+    return 1;
+  }
     
-	 if(load_files() == false)
-	 {
-		 return 1;
-	 }
+  if(load_files() == false)
+  {
+    return 1;
+  }
 
-   set_clips();
-   string blah = mainScreenLoop();
-   string userName = loginScreenLoop();
+  int state = 0;
+  set_clips();
+  //string blah = mainScreenLoop();
+  //string userName = loginScreenLoop();
 
-   GameGUI theGame;
-   theGame.CreateGUITile('F');
-   theGame.CreateGUITile('R');
-   theGame.CreateGUITile('I');
-   theGame.CreateGUITile('E');
-   theGame.CreateGUITile('N');
-   theGame.CreateGUITile('D');
-   theGame.CreateGUITile('S');
+  GameGUI theGame;
+/*  theGame.CreateGUITile('F');
+  theGame.CreateGUITile('R');
+  theGame.CreateGUITile('I');
+  theGame.CreateGUITile('E');
+  theGame.CreateGUITile('N');
+  theGame.CreateGUITile('D');
+  theGame.CreateGUITile('S');*/
+  LoginState theLoginState;
+  NewProfileState theNewProfileState;
 
-   //game loop
-	 while(!quit/*stateID != STATE_EXIT*/)
-	 {
-     
-     //Start the frame timer
-        //fps.start();
-        
-        //Do state event handling
-        //currentState->handle_events();
-        
-        /*Sprite* mySprites = getMySpriteArray(); 
-        int numSprites = getNumSprites(); 
+  //Keep track of the frame count
 
-        Sprite* dragSprite = NULL; */
+  //Keep track of the current frame
+    int frame = 0;
+    
+    //Whether or not to cap the frame rate
+    bool cap = true;
 
-        while(SDL_PollEvent(&event)) 
-        { 
-          theGame.handle_events();
-          if( event.type == SDL_QUIT )
-          {
-            quit = true;
-          } 
-        } 
-        //Do state logic
-        /*currentState->logic();
+    //The frame rate regulator
+    Timer fpsReg;
+    
+    //Timer used to calculate the frames per second
+    Timer fpsCalc;
+    
+    //Timer used to update the caption
+    Timer update;
+
+    //Start the update timer
+    update.start();
+    
+    //Start the frame timer
+    fpsCalc.start();
+
+  //game loop
+  while(!quit/*stateID != STATE_EXIT*/)
+  {
+    //Start the frame timer
+        fpsReg.start();
+    switch (state)
+    {
+    case 0: state = mainMenuState(); break;
+    case 1: state = theLoginState.run(); break;
+    case 2: state = theNewProfileState.run(); break;
+    }
+
+    while(SDL_PollEvent(&event)) 
+    { 
+      //theGame.handle_events();
+      if( event.type == SDL_QUIT )
+      {
+        quit = true;
+      } 
+    }
+
+    /*apply_surface(0, 0, background, screen);
+    theGame.show();
         
-        //Change state if needed
-        change_state();
-        
-        //Do state rendering*/
-        apply_surface(0, 0, background, screen);
-        theGame.show();
-        //currentState->render();
-        
-        //Update the screen*/
-        if( SDL_Flip( screen ) == -1 )
+    //Update the screen*/
+    if( SDL_Flip( screen ) == -1 )
+    {
+      return 1;    
+    }
+    //Increment the frame counter
+        frame++;
+        //If a second has passed since the caption was last updated
+
+        //If we want to cap the frame rate
+        if( ( cap == true ) && ( fpsReg.get_ticks() < 1000 / FRAMES_PER_SECOND ) )
         {
-            return 1;    
+            //Sleep the remaining frame time
+            SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - fpsReg.get_ticks() );
         }
-        
-        //Cap the frame rate
-        /*if( fps.get_ticks() < 1000 / FRAMES_PER_SECOND )
+        if( update.get_ticks() > 1000 )
         {
-            SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - fps.get_ticks() );
-        }*/
-     //EVENTS
-     //LOGIC
-		 /*RENDERING
-      clear_screen();
-      show_background();
-      show_objects();
-      update_screen();
-      cap_frame_rate();
-      */
-	 }
+            //The frame rate as a string
+            std::stringstream caption;
+            
+            //Calculate the frames per second and create the string
+            caption << "Average Frames Per Second: " << frame / ( fpsCalc.get_ticks() / 1000.f );
+            
+            //Reset the caption
+            SDL_WM_SetCaption( caption.str().c_str(), NULL );
+            
+            //Restart the update timer
+            update.start();    
+        }
+  }
 
-	 clean_up();
+  clean_up();
     
-    return 0;    
+  return 0;    
 }

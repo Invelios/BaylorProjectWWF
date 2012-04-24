@@ -1,3 +1,9 @@
+// Title  : GameBoard.h
+// Author :
+// Date Created :
+// Modified On:         By:                         Reason:
+//      4/23/12             Christopher Scoggins        Outlined Cheat function and created structs it needs
+
 #ifndef GAMEBOARD_H_INCLUDED
 #define GAMEBOARD_H_INCLUDED
 
@@ -8,12 +14,19 @@
 #include <sstream>
 #include "Setup.h"
 #include <set>
-#include "GUI.h"
+
+using namespace std;
 
 static const string NEW_FILE_NAME = "newboard.txt";
 static const string END_OF_FILE_ERROR = "NUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU";
 static const int ALPHABET_SIZE = 26;
 static const string USER_NAME = "alfred hitchcock";
+const int TILE_SIZE = 32;
+const int BOARD_LENGTH = 15;
+const int DECK_SIZE = 7;
+const int USER_NAME_MAX_LENGTH = 20;
+const int SCREEN_TOP_MARGIN = 64;
+const int SCREEN_BOTTOM_MARGIN = 32;
 
 class GameGUI;
 class GUITile;
@@ -35,6 +48,60 @@ public:
 };
 
 const SDL_Rect GameGUI::goButton = {384, 544, 64, 32};*/
+
+// Move struct used to represent a Move in a whole MoveMapping
+
+struct Move
+{
+    int thePositionInDeck;
+    int theXCoordinate;
+    int theYCoordinate;
+
+    Move()
+    {
+        thePositionInDeck = 0;
+        theXCoordinate = -1;
+        theYCoordinate = -1;
+    }
+
+    Move(int aPostionInDeck, int aXCoordinate, int aYCoordinate)
+    {
+        thePositionInDeck = aPostionInDeck;
+        theXCoordinate = aXCoordinate;
+        theYCoordinate = aYCoordinate;
+    }
+
+    bool operator<(Move anotherMove)
+    {
+        return thePositionInDeck < anotherMove.thePositionInDeck;
+    }
+};
+
+
+// MoveMapping struct used by cheat function to show a possible move
+
+struct MoveMapping
+{
+    vector< Move > theMoves;
+    int theScore;
+
+    bool operator<(MoveMapping anotherMoveMapping)
+    {
+        return theScore < anotherMoveMapping.theScore;
+    }
+
+};
+
+// Comparison Function Object to get desired vector ordering in cheat function
+
+struct maxScoreFirst
+{
+    bool operator()(MoveMapping firstMoveMapping, MoveMapping secondMoveMapping)
+    {
+        return firstMoveMapping.theScore > secondMoveMapping.theScore;
+    }
+};
+
 
 class GameBoard
 {
@@ -64,9 +131,6 @@ class GameBoard
     set<pair<int, int>> activeSpots;
     string creator; //which player made it?
     string turn; //whose turn is it?
-    GameBoard(); // new game
-
-    GameBoard(string boardString);// retrieving existing game
 
     /*
     baseValue:
@@ -79,6 +143,8 @@ class GameBoard
     */
 
 public:
+    GameBoard(); // new game
+    GameBoard(string boardString);// retrieving existing game
     void initialize();
     void retrieveGame(string boardString);
     bool placeSquare(int x, int y, char givenValue);
@@ -101,6 +167,12 @@ public:
 
     //calculateWord
     //Identify Square bonuses and erase if utilized. Replace if undone.
+
+    //Cheat Function
+    // Returns a sorted vector of MoveMappings, with the highest scoring moves at the front
+
+    vector< MoveMapping > cheat();
+
 
 };
 
@@ -386,9 +458,22 @@ void GameBoard::retrieveGame(string boardString)
     inputFile.close();*/
 }
 
-vector<pair<int,int> > GameBoard::cheat()
+vector< MoveMapping > GameBoard::cheat()
 {
+    vector< MoveMapping > allPossibleMoves;
 
+    // All Combinations of tiles in Decks
+
+    // Try every combination of tiles
+
+    // Try every way this combo can fit in each row
+
+    // Try every way this combo can fit in each column
+
+
+
+    // Sort the Vector using my MaxScoreFirst as the comparison object
+
+    return allPossibleMoves;
 }
-
 #endif // GAMEBOARD_H_INCLUDED

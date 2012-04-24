@@ -4,30 +4,27 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include "SDL_mixer.h"
+#include "Globals.h"
 #include <string>
 
 using namespace std;
 
+SDL_Event event;
+
+const int SCREEN_BPP = 32;
 const int SCREEN_WIDTH = 480;
 const int SCREEN_HEIGHT = 576;
-const int SCREEN_TOP_MARGIN = 64;
-const int SCREEN_BOTTOM_MARGIN = 32;
-const int SCREEN_BPP = 32;
-const int TILE_SIZE = 32;
-const int BOARD_LENGTH = 15;
-const int DECK_SIZE = 7;
-
-SDL_Surface * screen = NULL; //the screen, of course
-SDL_Surface * background = NULL; //black screen, border lines, and middle line
-SDL_Surface * TileSheet = NULL;
-
-SDL_Event event;
 
 TTF_Font *font = NULL;
 SDL_Color textColor = { 0, 0, 0 };
 
 Mix_Music *music = NULL;
 Mix_Chunk *scratch = NULL;
+
+SDL_Surface * screen = NULL; //the screen, of course
+SDL_Surface * background = NULL; //black screen, border lines, and middle line
+SDL_Surface * TileSheet = NULL;
+SDL_Surface * menuTiles = NULL;
 
 void set_clips();
 bool init();
@@ -37,6 +34,7 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
 void clean_up();
 
 SDL_Rect clips[42];
+SDL_Rect menuClips[50];
 
 void set_clips()
 {
@@ -53,6 +51,13 @@ void set_clips()
   }
   clips[33].w = 96;
   clips[39].w = 96;
+  for(int i = 0; i < 9; i++)
+  {
+    menuClips[i].x = 0;
+    menuClips[i].y = 48 * i;
+    menuClips[i].w = 224;
+    menuClips[i].h = 48;
+  }
 }
 
 bool init()
@@ -98,8 +103,10 @@ bool load_files()
 
     TileSheet = load_image("tiles.png");
 
+    menuTiles = load_image("menuTiles.png");
+
 	 //If there was a problem in loading the background
-    if( background == NULL )
+    if( background == NULL  || TileSheet == NULL || menuTiles == NULL)
     {
         return false;
     }

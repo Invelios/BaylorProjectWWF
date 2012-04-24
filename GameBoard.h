@@ -1,3 +1,9 @@
+// Title  : GameBoard.h
+// Author :
+// Date Created :
+// Modified On:         By:                         Reason:
+//      4/23/12             Christopher Scoggins        Outlined Cheat function and created structs it needs
+
 #ifndef GAMEBOARD_H_INCLUDED
 #define GAMEBOARD_H_INCLUDED
 
@@ -35,8 +41,62 @@ public:
 
 const SDL_Rect GameGUI::goButton = {384, 544, 64, 32};*/
 
+// Move struct used to represent a Move in a whole MoveMapping
+
+struct Move
+{
+    int thePositionInDeck;
+    int theXCoordinate;
+    int theYCoordinate;
+
+    Move()
+    {
+        thePositionInDeck = 0;
+        theXCoordinate = -1;
+        theYCoordinate = -1;
+    }
+
+    Move(int aPostionInDeck, int aXCoordinate, int aYCoordinate)
+    {
+        thePositionInDeck = aPostionInDeck;
+        theXCoordinate = aXCoordinate;
+        theYCoordinate = aYCoordinate;
+    }
+
+    bool operator<(Move anotherMove)
+    {
+        return thePositionInDeck < anotherMove.thePositionInDeck;
+    }
+};
+
+
+// MoveMapping struct used by cheat function to show a possible move
+
+struct MoveMapping
+{
+    vector< Move > theMoves;
+    int theScore;
+
+    bool operator<(MoveMapping anotherMoveMapping);
+    {
+        return theScore < anotherMoveMapping.theScore;
+    }
+
+};
+
+// Comparison Function Object to get desired vector ordering in cheat function
+
+struct maxScoreFirst
+{
+    bool operator()(MoveMapping firstMoveMapping, MoveMapping secondMoveMapping)
+    {
+        return firstMoveMapping.theScore > secondMoveMapping.theScore;
+    }
+}
+
+
 class GameBoard
-{   
+{
   friend class GUITile;
   friend class GameGUI;
     class Square
@@ -98,6 +158,12 @@ public:
     //calculateWord
     //Identify Square bonuses and erase if utilized. Replace if undone.
 
+    //Cheat Function
+    // Returns a sorted vector of MoveMappings, with the highest scoring moves at the front
+
+    vector< MoveMapping > cheat();
+
+
 };
 
 GameBoard::GameBoard() // new game
@@ -115,7 +181,7 @@ void GameBoard::initialize()
     /*char temp, tempSquare, tempBase;
     ifstream inputFile;
     inputFile.open(fileName.c_str());
-        
+
     this->theGameBoard = new Square*[BOARD_LENGTH];
     for(int i = 0; i < BOARD_LENGTH; i++)
     {
@@ -381,5 +447,25 @@ void GameBoard::retrieveGame(string boardString)
         initialize(EXISTING_FILE_NAME);
     inputFile.close();*/
 }
+
+vector< MoveMapping > GameBoard::cheat()
+{
+    vector< MoveMapping > allPossibleMoves;
+
+    // All Combinations of tiles in Decks
+
+    // Try every combination of tiles
+
+    // Try every way this combo can fit in each row
+
+    // Try every way this combo can fit in each column
+
+
+
+    // Sort the Vector using my MaxScoreFirst as the comparison object
+
+    return allPossibleMoves;
+}
+
 
 #endif // GAMEBOARD_H_INCLUDED

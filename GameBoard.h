@@ -14,6 +14,7 @@
 #include <sstream>
 #include "Setup.h"
 #include <set>
+#include "Permutations.h"
 
 using namespace std;
 
@@ -171,7 +172,7 @@ public:
     //Cheat Function
     // Returns a sorted vector of MoveMappings, with the highest scoring moves at the front
 
-    vector< MoveMapping > cheat();
+    vector< MoveMapping > cheat(bool thePlayerIsFirst);
 
 
 };
@@ -458,21 +459,157 @@ void GameBoard::retrieveGame(string boardString)
     inputFile.close();*/
 }
 
-vector< MoveMapping > GameBoard::cheat()
+// Needed for Cheat Function
+// Adapted from bruteForce powerSet Assignment
+
+vecotr< vector<int> > powerSet(vector <int> inS)
+{
+    vector< vector<int> > answer;
+
+    int bytes = 1;
+
+    for(int i = 0; i < inS.size(); i++)
+        bytes *= 2;
+set< set<char> > powerSet(set <char> inS)
+{
+    set< set<char> > answer;
+    string stringIn;
+
+    // Make String out of set
+
+    for(set<char>::iterator it = inS.begin(); it != inS.end(); it++)
+    {
+        stringIn += *it;
+    }
+
+
+    int bytes = 1;
+
+    for(int i = 0; i < inS.size(); i++)
+        bytes *= 2;
+
+    for(int i = 0; i < bytes; i++)
+    {
+        set<char> curS;
+
+        for(int j = 0; j < inS.size(); j++)
+        {
+
+            if((i >> j) % 2 == 1)
+            {
+                curS.insert(stringIn[j]);
+            }
+        }
+
+        answer.insert(curS);
+    }
+
+    return answer;
+}
+    for(int i = 0; i < bytes; i++)
+    {
+        vector<int> curS;
+
+        for(int j = 0; j < inS.size(); j++)
+        {
+
+            if((i >> j) % 2 == 1)
+            {
+                curS.push_back(inS[j]);
+            }
+        }
+
+        answer.push_back(curS);
+    }
+
+    return answer;
+}
+
+vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
 {
     vector< MoveMapping > allPossibleMoves;
 
+    char *thisPlayersDeck;                      // Assign the correct deck
+
     // All Combinations of tiles in Decks
+
+    vector<int> setOfDeckTiles;
+
+    for(int i = 0; i < DECK_SIZE)
+    {
+        setOfDeckTiles.push_back(i);
+    }
+
+    vector< vector<int> > powerSetOfDeckTiles = powerSet(setOfDeckTiles);
 
     // Try every combination of tiles
 
-    // Try every way this combo can fit in each row
+    for(int numOfSetOfTiles = 0; numOfSetOfTiles < powerSetOfDeckTiles.size(); numOfSetOfTiles++)
+    {
+        vector<int> aSetOfTiles = powerSetOfDeckTiles[numOfSetOfTiles];
 
-    // Try every way this combo can fit in each column
+        // Try every way this combo can fit in each row
+
+        for(int i = 0; i < BOARD_LENGTH; i++)
+        {
+            vector<int> theEmptyTilesInThisRow = emptyTilesInRow(i);
+
+            if(aSetOfTiles.size() <= theEmptyTilesInThisRow.size())
+            {
+                vector<int> theTilesToBePermuted;
+                for(int j = 0; j < theEmptyTilesInThisRow.size(); j++)
+                {
+                    if( j < aSetOfTiles.size())
+                        theTilesToBePermuted.push_back(aSetOfTiles[j]);
+                    else
+                        theTilesToBePermuted.push_back(-1);             // -1 is no tile
+                }
+
+                vector< vector<int> > thePermutationsOfTiles = Johnson_Trotter(theTilesToBePermuted);
+
+                for(int k = 0; k < thePermutationsOfTiles.size(); k++)
+                {
+                    vector<int> theCurrentPermutation = thePermutationsOfTiles[k];
+
+                    vector< Move > theMoves;
+
+                    GameBoard testingGameBoard(toString()); // Copy the current board
+
+                    for(int m = 0; m < theCurrentPermutation.size(); m++)
+                    {
+                        if(theCurrentPermutation[m] != -1)
+                        {
+                            testingGameBoard.placeSquare( theEmptyTilesInThisRow[m], i, thisPlayersDeck[theCurrentPermutation[m]]);
+                            Move aMove(theCurrentPermutation, theEmptyTilesInThisRow[m], i);
+                            theMoves.push_back(aMove);
+                        }
+
+                    }
+
+                    int thisMovesScore = testingGameBoard.getMoveScore();           // FNIY needs to be the functions that returns the score of the move
+
+                    if(thisMovesScore > 0)
+                    {
+                        MoveMapping aMoveMapping;
+                        aMoveMapping.theScore = thisMovesScore;
+                        aMoveMapping.theMoves = theMoves;
+
+                        allPossibleMoves.push_back(aMoveMapping);
+                    }
+                }
+            }
+        }
+
+        // Try every way this combo can fit in each column
+    }
+
+
 
 
 
     // Sort the Vector using my MaxScoreFirst as the comparison object
+
+    sort(allPossibleMoves.front(), allPossibleMoves.back(), maxScoreFirst);
 
     return allPossibleMoves;
 }

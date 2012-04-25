@@ -3,6 +3,7 @@
 // Date Created :
 // Modified On:         By:                         Reason:
 //      4/23/12             Christopher Scoggins        Outlined Cheat function and created structs it needs
+//      4/24/12             Christopher Scoggins        Possibly Finished up cheat funtion.
 
 #ifndef GAMEBOARD_H_INCLUDED
 #define GAMEBOARD_H_INCLUDED
@@ -154,6 +155,8 @@ public:
     bool removeDeckSquare(int x);
     string GameBoard::toString();
     void update();
+    vector<int> emptyTilesInRow(int theRow);
+    vector<int> emptyTilesInColumn(int theColumn);
 
     vector<pair<int,int> > cheat();
 
@@ -525,6 +528,34 @@ set< set<char> > powerSet(set <char> inS)
     return answer;
 }
 
+vector<int> emptyTilesInRow(int theRow)
+{
+    vector<int> theEmptyTilesInRow;
+    for(int i = 0; i < BOARD_LENGTH; i++ )
+    {
+        if(theGameBoard[i][theRow].SquareValue == '-')
+        {
+            theEmptyTilesInRow.push_back(i);
+        }
+    }
+
+    return theEmptyTilesInRow;
+}
+
+vector<int> emptyTilesInColumn(int theColumn)
+{
+    vector<int> theEmptyTilesInColumn;
+    for(int i = 0; i < BOARD_LENGTH; i++ )
+    {
+        if(theGameBoard[theColumn][i].SquareValue == '-')
+        {
+            theEmptyTilesInRow.push_back(i);
+        }
+    }
+
+    return theEmptyTilesInColumn;
+}
+
 vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
 {
     vector< MoveMapping > allPossibleMoves;
@@ -601,10 +632,57 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
         }
 
         // Try every way this combo can fit in each column
+
+        for(int i = 0; i < BOARD_LENGTH; i++)
+        {
+            vector<int> theEmptyTilesInThisColumn = emptyTilesInColumn(i);
+
+            if(aSetOfTiles.size() <= theEmptyTilesInThisRow.size())
+            {
+                vector<int> theTilesToBePermuted;
+                for(int j = 0; j < theEmptyTilesInThisColumn.size(); j++)
+                {
+                    if( j < aSetOfTiles.size())
+                        theTilesToBePermuted.push_back(aSetOfTiles[j]);
+                    else
+                        theTilesToBePermuted.push_back(-1);             // -1 is no tile
+                }
+
+                vector< vector<int> > thePermutationsOfTiles = Johnson_Trotter(theTilesToBePermuted);
+
+                for(int k = 0; k < thePermutationsOfTiles.size(); k++)
+                {
+                    vector<int> theCurrentPermutation = thePermutationsOfTiles[k];
+
+                    vector< Move > theMoves;
+
+                    GameBoard testingGameBoard(toString()); // Copy the current board
+
+                    for(int m = 0; m < theCurrentPermutation.size(); m++)
+                    {
+                        if(theCurrentPermutation[m] != -1)
+                        {
+                            testingGameBoard.placeSquare( i, theEmptyTilesInThisColumn[m], thisPlayersDeck[theCurrentPermutation[m]]);
+                            Move aMove(theCurrentPermutation, i, theEmptyTilesInThisColumn[m]);
+                            theMoves.push_back(aMove);
+                        }
+
+                    }
+
+                    int thisMovesScore = testingGameBoard.getMoveScore();           // FNIY needs to be the functions that returns the score of the move
+
+                    if(thisMovesScore > 0)
+                    {
+                        MoveMapping aMoveMapping;
+                        aMoveMapping.theScore = thisMovesScore;
+                        aMoveMapping.theMoves = theMoves;
+
+                        allPossibleMoves.push_back(aMoveMapping);
+                    }
+                }
+            }
+        }
     }
-
-
-
 
 
     // Sort the Vector using my MaxScoreFirst as the comparison object

@@ -473,23 +473,6 @@ vecotr< vector<int> > powerSet(vector <int> inS)
 
     for(int i = 0; i < inS.size(); i++)
         bytes *= 2;
-set< set<char> > powerSet(set <char> inS)
-{
-    set< set<char> > answer;
-    string stringIn;
-
-    // Make String out of set
-
-    for(set<char>::iterator it = inS.begin(); it != inS.end(); it++)
-    {
-        stringIn += *it;
-    }
-
-
-    int bytes = 1;
-
-    for(int i = 0; i < inS.size(); i++)
-        bytes *= 2;
 
     for(int i = 0; i < bytes; i++)
     {

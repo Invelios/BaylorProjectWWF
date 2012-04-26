@@ -296,6 +296,13 @@ bool GameBoard::removeDeckSquare(int x)
   return true;
 }
 
+//************************************************************
+// Desription: Draws a tile from the bag
+// Return: char
+// Pre: there are elements in the bag
+// Post: the drawn element is removed from the bag
+//************************************************************
+
 char GameBoard::draw()
 {
     srand( time(NULL));
@@ -310,6 +317,13 @@ char GameBoard::draw()
 
     return theCharacter;
 }
+
+//************************************************************
+// Desription: Draws Tiles for each blank spot in the given deck
+// Return: void
+// Pre: there are blank spots in the deck
+// Post: the blank spots have tiles
+//************************************************************
 
 void GameBoard::updateDeck(int theDeckNumber)
 {
@@ -535,7 +549,14 @@ vector< vector<int> > powerSet(vector <int> inS)
     return answer;
 }
 
-vector<int> emptyTilesInRow(int theRow)
+//************************************************************
+// Desription: Gives a vector of the indicies in the row that are blank
+// Return: vector<int>
+// Pre: The row exists
+// Post:
+//************************************************************
+
+vector<int> GameBoard::emptyTilesInRow(int theRow)
 {
     vector<int> theEmptyTilesInRow;
     for(int i = 0; i < BOARD_LENGTH; i++ )
@@ -549,7 +570,14 @@ vector<int> emptyTilesInRow(int theRow)
     return theEmptyTilesInRow;
 }
 
-vector<int> emptyTilesInColumn(int theColumn)
+//************************************************************
+// Desription: Gives a vector of the indicies in the column that are blank
+// Return: vector<int>
+// Pre: The Column exists
+// Post:
+//************************************************************
+
+vector<int> GameBoard::emptyTilesInColumn(int theColumn)
 {
     vector<int> theEmptyTilesInColumn;
     for(int i = 0; i < BOARD_LENGTH; i++ )

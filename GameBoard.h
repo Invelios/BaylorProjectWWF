@@ -160,6 +160,8 @@ public:
     void update();
     vector<int> emptyTilesInRow(int theRow);
     vector<int> emptyTilesInColumn(int theColumn);
+    void updateDeck();
+    char draw();
 
     vector<pair<int,int> > cheat();
 
@@ -292,6 +294,43 @@ bool GameBoard::removeDeckSquare(int x)
 {
   this->deck1[x] = 0;
   return true;
+}
+
+char GameBoard::draw()
+{
+    srand( time(NULL));
+
+    int tileToDraw = rand() % squareBag.size();
+
+    multiset<char>::iterator theIterator = squareBag.begin() + tileToDraw;
+
+    char theCharacter = *theIterator;
+
+    squareBag.erase(theIterator);
+
+    return theCharacter;
+}
+
+void GameBoard::updateDeck(int theDeckNumber)
+{
+    char * theDeck;
+
+    if(theDeckNumber == 1)
+    {
+        theDeck = deck1;
+    }
+    else
+    {
+        theDeck = deck2;
+    }
+
+    for(int i = 0; i < DECK_SIZE; i++)
+    {
+        if(theDeck[i] == 0)
+            theDeck[i] = draw();
+    }
+
+    return;
 }
 
 int GameBoard::verifyPlay()

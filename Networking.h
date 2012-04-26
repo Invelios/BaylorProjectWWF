@@ -9,6 +9,7 @@
 #define NETWORKING_H_INCLUDED
 
 #include "GameBoard.h"
+#include "MenuLogic.h"
 #include "Wwf.h"
 #include <vector>
 #include <string>
@@ -165,14 +166,14 @@ bool Networking::setGameStatus(int gameID, bool status)
     return result;
 }
 
-GameBoard * Networking::getGame(int gameID)
+string Networking::getGame(int gameID)
 {
     string command = "command=getGame&gameID=" + gameID;
 
     net << command;
     net >> command;
 
-    return  new GameBoard(command);
+    return  command;
 }
 
  bool Networking::updateGame(int gameID, GameBoard aGameBoard)

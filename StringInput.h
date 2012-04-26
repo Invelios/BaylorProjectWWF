@@ -83,6 +83,18 @@ void StringInput::handle_input()
         //Append the character
         str += (char)event.key.keysym.unicode;
       }
+      else if((event.key.keysym.unicode  == '-'))
+      {
+        str += '_';
+      }
+      else if((event.key.keysym.unicode == '='))
+      {
+        str += '@';
+      }
+      else if((event.key.keysym.unicode == 46))
+      {
+        str += 46;
+      }
       //If backspace was pressed and the string isn't blank
       if( ( event.key.keysym.sym == SDLK_BACKSPACE ) && ( str.length() != 0 ) )
       {

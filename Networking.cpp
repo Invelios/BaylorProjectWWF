@@ -7,11 +7,11 @@
 /*
 #include "Networking.h"
 #include "GameBoard.h"
+#include "MenuLogic.h"
 #include <string>
 #include <cstdlib>
 
 using namespace std;
-
 bool Networking::createAccount(string user, string pass, string email)
 {
     bool result = false;

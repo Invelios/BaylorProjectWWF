@@ -5,7 +5,7 @@
     Modified on:        By:
         4/13/12             Christopher Scoggins
 */
-/*#include "MenuLogic.h"
+#include "MenuLogic.h"
 
 using namespace std;
 
@@ -29,5 +29,3 @@ vector<gameInfo> MenuLogic::getUsersGames(string theUser)
     return theGameInfoVector;
 
 }
-
-*/

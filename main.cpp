@@ -4,11 +4,9 @@
 #include "SDL_mixer.h"
 #include <string>
 #include <vector>
-#include "Setup.h"
 //#include "GameState.h"
 #include "GUI.h"
-#include "LoginMenuGUI.h"
-#include "Networking.h"
+#include "Setup.h"
 #include "FirstMenuGUI.h"
 #include "Timer.h"
 
@@ -34,10 +32,9 @@ int main( int argc, char* args[] )
 
   int state = 0;
   set_clips();
-  //string blah = mainScreenLoop();
-  //string userName = loginScreenLoop();
 
   GameGUI theGame;
+  //MenuGUI theMenuGUI;
 /*  theGame.CreateGUITile('F');
   theGame.CreateGUITile('R');
   theGame.CreateGUITile('I');
@@ -47,6 +44,9 @@ int main( int argc, char* args[] )
   theGame.CreateGUITile('S');*/
   LoginState theLoginState;
   NewProfileState theNewProfileState;
+  DisplayGamesState theDisplayGamesState;
+  MenuGUI * theMenuGUI = NULL;
+  string userName;
 
   //Keep track of the frame count
 
@@ -81,6 +81,13 @@ int main( int argc, char* args[] )
     case 0: state = mainMenuState(); break;
     case 1: state = theLoginState.run(); break;
     case 2: state = theNewProfileState.run(); break;
+    case 3: state = theDisplayGamesState.run(); break;
+    case 4: if(theMenuGUI == NULL)
+            {
+              theMenuGUI = new MenuGUI(userName);
+            }
+            theMenuGUI->run();
+            break;
     }
 
     while(SDL_PollEvent(&event)) 

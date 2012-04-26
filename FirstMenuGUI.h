@@ -7,6 +7,7 @@
 #include "StringInput.h"
 #include "Button.h"
 #include "Globals.h"
+#include "MenuGUI.h"
 
 using namespace std;
 
@@ -36,6 +37,14 @@ int mainMenuState()
   loginButton.show();
   return 0;
 }
+
+class DisplayGamesState
+{
+
+public:
+  DisplayGamesState(){}
+  int run(){return 3;}
+};
 
 class NewProfileState
 {
@@ -175,7 +184,7 @@ public:
                   }
                   else
                   {
-                    return 3;
+                    return 0;
                   }
               }
           }
@@ -296,7 +305,7 @@ public:
                   }
                   else
                   {
-                    return 3;
+                    return 4;
                   }
               }
           }

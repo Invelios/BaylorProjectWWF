@@ -13,6 +13,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <deque>
 #include "Setup.h"
 #include <set>
 #include "Permutations.h"
@@ -29,6 +30,7 @@ const int DECK_SIZE = 7;
 const int USER_NAME_MAX_LENGTH = 20;
 const int SCREEN_TOP_MARGIN = 64;
 const int SCREEN_BOTTOM_MARGIN = 32;
+const int letterScores[26] = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
 
 class GameGUI;
 class GUITile;
@@ -154,6 +156,7 @@ public:
     bool removeSquare(pair<int, int> givenPair);
     bool removeDeckSquare(int x);
     string GameBoard::toString();
+    vector<string> GameBoard::constructStrings(bool orientation, int &points);
     void update();
     vector<int> emptyTilesInRow(int theRow);
     vector<int> emptyTilesInColumn(int theColumn);
@@ -465,7 +468,7 @@ void GameBoard::retrieveGame(string boardString)
 // Needed for Cheat Function
 // Adapted from bruteForce powerSet Assignment
 
-vecotr< vector<int> > powerSet(vector <int> inS)
+vector< vector<int> > powerSet(vector <int> inS)
 {
     vector< vector<int> > answer;
 
@@ -549,7 +552,7 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
 
     vector<int> setOfDeckTiles;
 
-    for(int i = 0; i < DECK_SIZE)
+    for(int i = 0; i < DECK_SIZE; i++)
     {
         setOfDeckTiles.push_back(i);
     }
@@ -673,5 +676,387 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
     sort(allPossibleMoves.front(), allPossibleMoves.back(), maxScoreFirst);
 
     return allPossibleMoves;
+}
+
+vector<string> GameBoard::constructStrings(bool orientation, int &points)//horizantal = false. vertical = true
+{
+  points = 0;
+  int wordPoints = 0;
+  int modifier = 0;
+  int letterMulti = 1;
+  int wordMulti = 1;
+  int x, y, originalX, originalY;
+  vector<deque<char> > strings;
+  set<pair<int, int> >::iterator it = activeSpots.begin();
+  deque<char> primaryString;
+  if(orientation == false)
+  {
+    //set<pair<int, int>> activeSpots;
+    /*
+    baseValue:
+    - = Origin
+    0  = Blank
+    1  = Double Letter
+    2  = Triple Letter
+    3  = Double Word
+    4  = Triple Word
+    */
+    x = originalX = (*it).first;
+    y = originalY = (*it).second;
+    primaryString.push_back(theGameBoard[x][y].SquareValue);
+    modifier = theGameBoard[x][y].baseValue;
+    if(modifier == 1)
+    {
+      letterMulti *= 2;
+    }
+    else if(modifier == 2)
+    {
+      letterMulti *= 3;
+    }
+    else if(modifier == 3)
+    {
+      wordMulti *= 2;
+    }
+    else if(modifier == 4)
+    {
+      wordMulti *= 3;
+    }
+
+    wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+    letterMulti = 1;
+    x++;
+    while(theGameBoard[x][y].SquareValue != '-')
+    {
+      primaryString.push_back(theGameBoard[x][y].SquareValue);
+      if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+      x++;
+    }
+    x = originalX - 1;
+    while(theGameBoard[x][y].SquareValue != '-')
+    {
+      primaryString.push_front(theGameBoard[x][y].SquareValue);
+      if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+      x--;
+    }
+    points += wordPoints * wordMulti;
+    wordMulti = 1;
+    wordPoints = 0;
+    strings.push_back(primaryString);
+    for(it; it != activeSpots.end(); it++)
+    {
+      deque<char> nextString;
+      x = originalX;
+      y = originalY;
+      nextString.push_back(theGameBoard[x][y].SquareValue);
+      if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+      y++;
+      while(theGameBoard[x][y].SquareValue != '-')
+      {
+        nextString.push_back(theGameBoard[x][y].SquareValue);
+        if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+        y++;
+      }
+      y = originalY - 1;
+      while(theGameBoard[x][y].SquareValue != '-')
+      {
+        nextString.push_front(theGameBoard[x][y].SquareValue);
+        if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+        y--;
+      }
+      strings.push_back(nextString);
+      points += wordPoints * wordMulti;
+      wordMulti = 1;
+      wordPoints = 0;
+    }
+  }
+  if(orientation == true)
+  {
+    //set<pair<int, int>> activeSpots;
+    x = originalX = (*it).first;
+    y = originalY = (*it).second;
+    primaryString.push_back(theGameBoard[x][y].SquareValue);
+    if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+    y++;
+    while(theGameBoard[x][y].SquareValue != '-')
+    {
+      primaryString.push_back(theGameBoard[x][y].SquareValue);
+      if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+      y++;
+    }
+    y = originalY - 1;
+    while(theGameBoard[x][y].SquareValue != '-')
+    {
+      primaryString.push_front(theGameBoard[x][y].SquareValue);
+      if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+      y--;
+    }
+    strings.push_back(primaryString);
+    points += wordPoints * wordMulti;
+    wordMulti = 1;
+    wordPoints = 0;
+    for(it; it != activeSpots.end(); it++)
+    {
+      deque<char> nextString;
+      x = originalX;
+      y = originalY;
+      nextString.push_back(theGameBoard[x][y].SquareValue);
+      if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+      x++;
+      while(theGameBoard[x][y].SquareValue != '-')
+      {
+        nextString.push_back(theGameBoard[x][y].SquareValue);
+        if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+        x++;
+      }
+      x = originalX - 1;
+      while(theGameBoard[x][y].SquareValue != '-')
+      {
+        nextString.push_front(theGameBoard[x][y].SquareValue);
+        if(theGameBoard[x][y].active)
+      {
+        if(modifier == 1)
+        {
+          letterMulti *= 2;
+        }
+        else if(modifier == 2)
+        {
+          letterMulti *= 3;
+        }
+        else if(modifier == 3)
+        {
+          wordMulti *= 2;
+        }
+        else if(modifier == 4)
+        {
+          wordMulti *= 3;
+        }
+      }
+      wordPoints += letterScores[theGameBoard[x][y].SquareValue - 'a'] * letterMulti;
+      letterMulti = 1;
+        x--;
+      }
+      strings.push_back(nextString);
+      points += wordPoints * wordMulti;
+      wordMulti = 1;
+      wordPoints = 0;
+    }
+  }
+  
+  /*
+  vector<deque<char> > strings;
+  set<pair<int, int> >::iterator it = activeSpots.begin();
+  deque<char> primaryString;*/
+  vector<string> returnedStrings;
+  deque<char>::iterator itt;
+  for(int i = 0; i < strings.size(); i++)
+  {
+    string newString;
+    for(itt = strings[i].begin(); itt != strings[i].end(); i++)
+    {
+      newString += *itt;
+    }
+    returnedStrings.push_back(newString);
+  }
+  return returnedStrings;
 }
 #endif // GAMEBOARD_H_INCLUDED

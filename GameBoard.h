@@ -17,6 +17,7 @@
 #include "Setup.h"
 #include <set>
 #include "Permutations.h"
+#include "Dictionary.h"
 
 using namespace std;
 
@@ -195,32 +196,6 @@ GameBoard::GameBoard(string boardString) // retrieving existing game
 
 void GameBoard::initialize()
 {
-    /*char temp, tempSquare, tempBase;
-    ifstream inputFile;
-    inputFile.open(fileName.c_str());
-
-    this->theGameBoard = new Square*[BOARD_LENGTH];
-    for(int i = 0; i < BOARD_LENGTH; i++)
-    {
-      theGameBoard[i] = new Square[BOARD_LENGTH];
-    }
-    for(int i = 0; i < BOARD_LENGTH; i++)
-    {
-        for(int j = 0; j < BOARD_LENGTH; j++)
-        {
-            if(inputFile.eof())
-                throw(END_OF_FILE_ERROR);
-            inputFile.get(tempSquare);
-            inputFile.get(tempBase);
-            (theGameBoard[i][j]).SquareValue = tempSquare;
-            (theGameBoard[i][j]).baseValue = tempBase;
-        }
-        inputFile.ignore(1, '\n');
-    }
-    for(int i = 0; i < DECK_SIZE; i++)
-    {
-      deck1[i] = 0;
-    }*/
   char temp, tempSquare, tempBase;
   ifstream inputFile;
   inputFile.open(NEW_FILE_NAME.c_str());
@@ -237,6 +212,10 @@ void GameBoard::initialize()
           (theGameBoard[i][j]).baseValue = tempBase;
       }
       inputFile.ignore(1, '\n');
+  }
+  for(int i = 0; i < DECK_SIZE; i++)
+  {
+    deck1[i] = deck2[i] = 0;
   }
   /*for(int i = 0; i < DECK_SIZE; i++)
       inputFile.get(deck1[i]);
@@ -335,19 +314,38 @@ int GameBoard::verifyPlay()
 
   bool connected = true;
   it = activeSpots.begin();
-  for(; it != activeSpots.end(); it++)
+  /*for(; it != activeSpots.end(); it++)
   {
     if(!checkSpots(it))
     {
       connected = false;
     }
-  }
+  }*/
 
   if(!connected)
   {
     return -2;
   }
-  return 1;
+  int points = 0;
+  vector<string> theStrings = constructStrings(orientation, points);
+  bool validWords = true;
+  Dictionary theDictionary;
+  theDictionary.loadFile("dictionary.txt");
+  for(int i = 0; i < theStrings.size() && validWords; i++)
+  {
+    if(theStrings[i].size() > 1)
+    {
+      validWords = theDictionary.verifyWord(theStrings[i]);
+    }
+  }
+  if(validWords)
+  {
+    return points;
+  }
+  else
+  {
+    return -5;
+  }
 }
 
 bool GameBoard::checkSpots(set<pair<int, int>>::iterator it)
@@ -496,7 +494,7 @@ vector< vector<int> > powerSet(vector <int> inS)
     return answer;
 }
 
-vector<int> emptyTilesInRow(int theRow)
+vector<int> GameBoard::emptyTilesInRow(int theRow)
 {
     vector<int> theEmptyTilesInRow;
     for(int i = 0; i < BOARD_LENGTH; i++ )
@@ -510,14 +508,14 @@ vector<int> emptyTilesInRow(int theRow)
     return theEmptyTilesInRow;
 }
 
-vector<int> emptyTilesInColumn(int theColumn)
+vector<int> GameBoard::emptyTilesInColumn(int theColumn)
 {
     vector<int> theEmptyTilesInColumn;
     for(int i = 0; i < BOARD_LENGTH; i++ )
     {
         if(theGameBoard[theColumn][i].SquareValue == '-')
         {
-            theEmptyTilesInRow.push_back(i);
+            theEmptyTilesInColumn.push_back(i);
         }
     }
 
@@ -579,13 +577,13 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
                         if(theCurrentPermutation[m] != -1)
                         {
                             testingGameBoard.placeSquare( theEmptyTilesInThisRow[m], i, thisPlayersDeck[theCurrentPermutation[m]]);
-                            Move aMove(theCurrentPermutation, theEmptyTilesInThisRow[m], i);
+                            Move aMove(theCurrentPermutation[m], theEmptyTilesInThisRow[m], i);
                             theMoves.push_back(aMove);
                         }
 
                     }
 
-                    int thisMovesScore = testingGameBoard.getMoveScore();           // FNIY needs to be the functions that returns the score of the move
+                    int thisMovesScore = testingGameBoard.verifyPlay();           // FNIY needs to be the functions that returns the score of the move
 
                     if(thisMovesScore > 0)
                     {
@@ -605,7 +603,7 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
         {
             vector<int> theEmptyTilesInThisColumn = emptyTilesInColumn(i);
 
-            if(aSetOfTiles.size() <= theEmptyTilesInThisRow.size())
+            if(aSetOfTiles.size() <= theEmptyTilesInThisColumn.size())
             {
                 vector<int> theTilesToBePermuted;
                 for(int j = 0; j < theEmptyTilesInThisColumn.size(); j++)
@@ -631,13 +629,13 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
                         if(theCurrentPermutation[m] != -1)
                         {
                             testingGameBoard.placeSquare( i, theEmptyTilesInThisColumn[m], thisPlayersDeck[theCurrentPermutation[m]]);
-                            Move aMove(theCurrentPermutation, i, theEmptyTilesInThisColumn[m]);
+                            Move aMove(theCurrentPermutation[m], i, theEmptyTilesInThisColumn[m]);
                             theMoves.push_back(aMove);
                         }
 
                     }
 
-                    int thisMovesScore = testingGameBoard.getMoveScore();           // FNIY needs to be the functions that returns the score of the move
+                    int thisMovesScore = testingGameBoard.verifyPlay();           // FNIY needs to be the functions that returns the score of the move
 
                     if(thisMovesScore > 0)
                     {
@@ -655,7 +653,7 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
 
     // Sort the Vector using my MaxScoreFirst as the comparison object
 
-    sort(allPossibleMoves.front(), allPossibleMoves.back(), maxScoreFirst);
+    sort(allPossibleMoves.begin(), allPossibleMoves.end(), maxScoreFirst());
 
     return allPossibleMoves;
 }
@@ -664,6 +662,7 @@ vector<string> GameBoard::constructStrings(bool orientation, int &points)//horiz
 {
   points = 0;
   int wordPoints = 0;
+  int wordSize = 0;
   int modifier = 0;
   int letterMulti = 1;
   int wordMulti = 1;
@@ -767,8 +766,8 @@ vector<string> GameBoard::constructStrings(bool orientation, int &points)//horiz
     for(it; it != activeSpots.end(); it++)
     {
       deque<char> nextString;
-      x = originalX;
-      y = originalY;
+      x = originalX = (*it).first;
+      y = originalY = (*it).second;
       nextString.push_back(theGameBoard[x][y].SquareValue);
       if(theGameBoard[x][y].active)
       {
@@ -845,8 +844,11 @@ vector<string> GameBoard::constructStrings(bool orientation, int &points)//horiz
       letterMulti = 1;
         y--;
       }
-      strings.push_back(nextString);
-      points += wordPoints * wordMulti;
+      if(nextString.size() > 1)
+      {
+        strings.push_back(nextString);
+        points += wordPoints * wordMulti;
+      }
       wordMulti = 1;
       wordPoints = 0;
     }
@@ -1033,7 +1035,7 @@ vector<string> GameBoard::constructStrings(bool orientation, int &points)//horiz
   for(int i = 0; i < strings.size(); i++)
   {
     string newString;
-    for(itt = strings[i].begin(); itt != strings[i].end(); i++)
+    for(itt = strings[i].begin(); itt != strings[i].end(); itt++)
     {
       newString += *itt;
     }

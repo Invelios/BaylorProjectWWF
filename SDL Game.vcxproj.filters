@@ -27,6 +27,15 @@
     <ClCompile Include="GUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LoginMenuGUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="PongBackground.png">
@@ -39,6 +48,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="background.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="newboard.txt">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -55,10 +67,34 @@
     <ClInclude Include="Dictionary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MenuGUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginMenuGUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FirstMenuGUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="GameBoard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MenuGUI.h">
+    <ClInclude Include="Networking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuLogic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

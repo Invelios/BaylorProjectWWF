@@ -35,13 +35,13 @@ int main( int argc, char* args[] )
 
   GameGUI theGame;
   //MenuGUI theMenuGUI;
-/*  theGame.CreateGUITile('F');
-  theGame.CreateGUITile('R');
-  theGame.CreateGUITile('I');
-  theGame.CreateGUITile('E');
-  theGame.CreateGUITile('N');
-  theGame.CreateGUITile('D');
-  theGame.CreateGUITile('S');*/
+  theGame.CreateGUITile('f');
+  theGame.CreateGUITile('r');
+  theGame.CreateGUITile('i');
+  theGame.CreateGUITile('e');
+  theGame.CreateGUITile('n');
+  theGame.CreateGUITile('d');
+  theGame.CreateGUITile('s');
   LoginState theLoginState;
   NewProfileState theNewProfileState;
   DisplayGamesState theDisplayGamesState;
@@ -90,19 +90,21 @@ int main( int argc, char* args[] )
             break;
     }
 
+    //theGame.theGameBoard->cheat(true);
+
     while(SDL_PollEvent(&event)) 
     { 
-      //theGame.handle_events();
+      theGame.handle_events();
       if( event.type == SDL_QUIT )
       {
         quit = true;
       } 
     }
 
-    /*apply_surface(0, 0, background, screen);
+    apply_surface(0, 0, background, screen);
     theGame.show();
         
-    //Update the screen*/
+    //Update the screen
     if( SDL_Flip( screen ) == -1 )
     {
       return 1;    

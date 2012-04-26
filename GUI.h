@@ -13,8 +13,6 @@
 
 using namespace std;
 
-
-
 class GameGUI;
 class GameBoard;
 class GUITile;
@@ -126,7 +124,7 @@ GUITile::GUITile(int start, char letter, GameGUI * aGUI)
     theGUI = aGUI;
     
     //Set the default sprite
-    clip = &clips[letter - 65];
+    clip = &clips[letter - 'a'];
 }
 
 void GUITile::show()
@@ -310,7 +308,8 @@ void GoButton::handle_events()
         {
             pressed = false;
             resetImage();
-            theGUI->theGameBoard->verifyPlay();
+            int blah = theGUI->theGameBoard->verifyPlay();
+            int j = 45;
             //GO GO GO!
         }
     }

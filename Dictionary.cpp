@@ -39,7 +39,7 @@ bool Dictionary::verifyWord(string w)
     bool found = true;
     if(words.count(w) == 0)
     {
-        found = true;
+        found = false;
     }
 
     return found;

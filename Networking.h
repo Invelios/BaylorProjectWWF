@@ -30,7 +30,7 @@ class Networking
 
     bool login(string user, string pass);
 
-    bool changePassword(string oldPass, string newPass);
+    bool changePassword(string user, string oldPass, string newPass);
 
     bool createGame(string user1, string user2);
 
@@ -46,6 +46,13 @@ class Networking
 
 };
 
+//************************************************************
+// Desription: Communicated with the server to create an account
+// Return: bool
+// Pre: Networking was constructed
+// Post:
+//************************************************************
+
 bool Networking::createAccount(string user, string pass, string email)
 {
     bool result = false;
@@ -58,6 +65,13 @@ bool Networking::createAccount(string user, string pass, string email)
 
     return result;
 }
+
+//************************************************************
+// Desription: Gets all users from the server
+// Return: vector<string>
+// Pre: Networking object constructed
+// Post:
+//************************************************************
 
 vector<string> Networking::getAllUsers()
 {
@@ -73,6 +87,13 @@ vector<string> Networking::getAllUsers()
     return theUserVector;
 }
 
+//************************************************************
+// Desription: Verifys that the user/pass combo is a valid combo on the server
+// Return: bool
+// Pre: Networking Object constructed
+// Post:
+//************************************************************
+
 bool Networking::login(string user, string pass)
 {
     bool result = false;
@@ -86,10 +107,17 @@ bool Networking::login(string user, string pass)
     return result;
 }
 
-bool Networking::changePassword(string oldPass, string newPass)
+//************************************************************
+// Desription: Tells server to change a users password
+// Return: bool
+// Pre: Networking Object Constructed
+// Post:
+//************************************************************
+
+bool Networking::changePassword(string user, string oldPass, string newPass)
 {
     bool result = false;
-    string command = "command=changePassword&user=" + oldPass + "&oldPW=OldPassword&newPW=" + newPass;
+    string command = "command=changePassword&user=" + user + "&oldPW=" + oldPass + "&newPW=" + newPass;
     net << command;
     net >> command;
 
@@ -98,6 +126,13 @@ bool Networking::changePassword(string oldPass, string newPass)
 
     return result;
 }
+
+//************************************************************
+// Desription: creates a game between 2 users
+// Return: bool
+// Pre: Networking Object Constructed
+// Post:
+//************************************************************
 
 bool Networking::createGame(string user1, string user2)
 {
@@ -111,6 +146,13 @@ bool Networking::createGame(string user1, string user2)
 
     return result;
 }
+
+//************************************************************
+// Desription: Will get all gameIDs from the server for a user
+// Return: vector<int>
+// Pre: Networking Object Constructed
+// Post:
+//************************************************************
 
 vector<int> Networking::getAllGameID(string user)
 {
@@ -129,6 +171,13 @@ vector<int> Networking::getAllGameID(string user)
     return data;
 }
 
+//************************************************************
+// Desription: Get active gameIDs from the server for a user
+// Return: vector<int>
+// Pre: Networking Object Constructed
+// Post:
+//************************************************************
+
 vector<int> Networking::getActiveGameID(string user)
 {
     vector<int> data;
@@ -145,6 +194,13 @@ vector<int> Networking::getActiveGameID(string user)
 
     return data;
 }
+
+//************************************************************
+// Desription: Will set the game status as ACTIVE or INACTIVE
+// Return: bool
+// Pre: Networking object constructed
+// Post:
+//************************************************************
 
 bool Networking::setGameStatus(int gameID, bool status)
 {
@@ -166,6 +222,13 @@ bool Networking::setGameStatus(int gameID, bool status)
     return result;
 }
 
+//************************************************************
+// Desription: Will get the string to construct the game for the given gameID
+// Return: string
+// Pre: Networking Object constructed
+// Post:
+//************************************************************
+
 string Networking::getGame(int gameID)
 {
     string command = "command=getGame&gameID=" + gameID;
@@ -175,6 +238,13 @@ string Networking::getGame(int gameID)
 
     return  command;
 }
+
+//************************************************************
+// Desription: Updates the games' string representation on the server
+// Return: bool
+// Pre: Networking Object Constructed
+// Post:
+//************************************************************
 
  bool Networking::updateGame(int gameID, GameBoard aGameBoard)
 {

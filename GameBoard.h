@@ -161,6 +161,8 @@ public:
     void update();
     vector<int> emptyTilesInRow(int theRow);
     vector<int> emptyTilesInColumn(int theColumn);
+    void updateDeck();
+    char draw();
 
     vector<pair<int,int> > cheat();
 
@@ -271,6 +273,57 @@ bool GameBoard::removeDeckSquare(int x)
 {
   this->deck1[x] = 0;
   return true;
+}
+
+//************************************************************
+// Desription: Draws a tile from the bag
+// Return: char
+// Pre: there are elements in the bag
+// Post: the drawn element is removed from the bag
+//************************************************************
+
+char GameBoard::draw()
+{
+    srand( time(NULL));
+
+    int tileToDraw = rand() % squareBag.size();
+
+    multiset<char>::iterator theIterator = squareBag.begin() + tileToDraw;
+
+    char theCharacter = *theIterator;
+
+    squareBag.erase(theIterator);
+
+    return theCharacter;
+}
+
+//************************************************************
+// Desription: Draws Tiles for each blank spot in the given deck
+// Return: void
+// Pre: there are blank spots in the deck
+// Post: the blank spots have tiles
+//************************************************************
+
+void GameBoard::updateDeck(int theDeckNumber)
+{
+    char * theDeck;
+
+    if(theDeckNumber == 1)
+    {
+        theDeck = deck1;
+    }
+    else
+    {
+        theDeck = deck2;
+    }
+
+    for(int i = 0; i < DECK_SIZE; i++)
+    {
+        if(theDeck[i] == 0)
+            theDeck[i] = draw();
+    }
+
+    return;
 }
 
 int GameBoard::verifyPlay()
@@ -494,6 +547,14 @@ vector< vector<int> > powerSet(vector <int> inS)
     return answer;
 }
 
+
+//************************************************************
+// Desription: Gives a vector of the indicies in the row that are blank
+// Return: vector<int>
+// Pre: The row exists
+// Post:
+//************************************************************
+
 vector<int> GameBoard::emptyTilesInRow(int theRow)
 {
     vector<int> theEmptyTilesInRow;
@@ -507,6 +568,15 @@ vector<int> GameBoard::emptyTilesInRow(int theRow)
 
     return theEmptyTilesInRow;
 }
+
+
+//************************************************************
+// Desription: Gives a vector of the indicies in the column that are blank
+// Return: vector<int>
+// Pre: The Column exists
+// Post:
+//************************************************************
+
 
 vector<int> GameBoard::emptyTilesInColumn(int theColumn)
 {
@@ -545,6 +615,8 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
     {
         vector<int> aSetOfTiles = powerSetOfDeckTiles[numOfSetOfTiles];
 
+        vector< vector<int> > thePermutationsOfTiles = Johnson_Trotter(aSetOfTiles);
+
         // Try every way this combo can fit in each row
 
         for(int i = 0; i < BOARD_LENGTH; i++)
@@ -553,16 +625,6 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
 
             if(aSetOfTiles.size() <= theEmptyTilesInThisRow.size())
             {
-                vector<int> theTilesToBePermuted;
-                for(int j = 0; j < theEmptyTilesInThisRow.size(); j++)
-                {
-                    if( j < aSetOfTiles.size())
-                        theTilesToBePermuted.push_back(aSetOfTiles[j]);
-                    else
-                        theTilesToBePermuted.push_back(-1);             // -1 is no tile
-                }
-
-                vector< vector<int> > thePermutationsOfTiles = Johnson_Trotter(theTilesToBePermuted);
 
                 for(int k = 0; k < thePermutationsOfTiles.size(); k++)
                 {
@@ -572,26 +634,28 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
 
                     GameBoard testingGameBoard(toString()); // Copy the current board
 
-                    for(int m = 0; m < theCurrentPermutation.size(); m++)
+                    for(int l = 0; l <= theEmptyTilesInThisRow.size() - theCurrentPermutation.size(); l++)
                     {
-                        if(theCurrentPermutation[m] != -1)
+
+                        for(int m = 0; m < theCurrentPermutation.size(); m++)
                         {
-                            testingGameBoard.placeSquare( theEmptyTilesInThisRow[m], i, thisPlayersDeck[theCurrentPermutation[m]]);
-                            Move aMove(theCurrentPermutation[m], theEmptyTilesInThisRow[m], i);
-                            theMoves.push_back(aMove);
+
+                                testingGameBoard.placeSquare( theEmptyTilesInThisRow[m + l], i, thisPlayersDeck[theCurrentPermutation[m]]);
+                                Move aMove(theCurrentPermutation[m], theEmptyTilesInThisRow[m + 1], i);
+                                theMoves.push_back(aMove);
                         }
 
-                    }
-
+ 
                     int thisMovesScore = testingGameBoard.verifyPlay();           // FNIY needs to be the functions that returns the score of the move
 
-                    if(thisMovesScore > 0)
-                    {
-                        MoveMapping aMoveMapping;
-                        aMoveMapping.theScore = thisMovesScore;
-                        aMoveMapping.theMoves = theMoves;
+                        if(thisMovesScore > 0)
+                        {
+                            MoveMapping aMoveMapping;
+                            aMoveMapping.theScore = thisMovesScore;
+                            aMoveMapping.theMoves = theMoves;
+                            allPossibleMoves.push_back(aMoveMapping);
+                        }
 
-                        allPossibleMoves.push_back(aMoveMapping);
                     }
                 }
             }
@@ -605,16 +669,6 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
 
             if(aSetOfTiles.size() <= theEmptyTilesInThisColumn.size())
             {
-                vector<int> theTilesToBePermuted;
-                for(int j = 0; j < theEmptyTilesInThisColumn.size(); j++)
-                {
-                    if( j < aSetOfTiles.size())
-                        theTilesToBePermuted.push_back(aSetOfTiles[j]);
-                    else
-                        theTilesToBePermuted.push_back(-1);             // -1 is no tile
-                }
-
-                vector< vector<int> > thePermutationsOfTiles = Johnson_Trotter(theTilesToBePermuted);
 
                 for(int k = 0; k < thePermutationsOfTiles.size(); k++)
                 {
@@ -624,26 +678,27 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
 
                     GameBoard testingGameBoard(toString()); // Copy the current board
 
-                    for(int m = 0; m < theCurrentPermutation.size(); m++)
+                    for(int l = 0; l <= theEmptyTilesInThisRow.size() - theCurrentPermutation.size(); l++)
                     {
-                        if(theCurrentPermutation[m] != -1)
+
+                        for(int m = 0; m < theCurrentPermutation.size(); m++)
                         {
-                            testingGameBoard.placeSquare( i, theEmptyTilesInThisColumn[m], thisPlayersDeck[theCurrentPermutation[m]]);
-                            Move aMove(theCurrentPermutation[m], i, theEmptyTilesInThisColumn[m]);
-                            theMoves.push_back(aMove);
+                                testingGameBoard.placeSquare( i, theEmptyTilesInThisColumn[m + l], thisPlayersDeck[theCurrentPermutation[m]]);
+                                Move aMove(theCurrentPermutation, i, theEmptyTilesInThisColumn[m + 1]);
+                                theMoves.push_back(aMove);
                         }
 
-                    }
-
+            
                     int thisMovesScore = testingGameBoard.verifyPlay();           // FNIY needs to be the functions that returns the score of the move
 
-                    if(thisMovesScore > 0)
-                    {
-                        MoveMapping aMoveMapping;
-                        aMoveMapping.theScore = thisMovesScore;
-                        aMoveMapping.theMoves = theMoves;
+                        if(thisMovesScore > 0)
+                        {
+                            MoveMapping aMoveMapping;
+                            aMoveMapping.theScore = thisMovesScore;
+                            aMoveMapping.theMoves = theMoves;
+                            allPossibleMoves.push_back(aMoveMapping);
+                        }
 
-                        allPossibleMoves.push_back(aMoveMapping);
                     }
                 }
             }

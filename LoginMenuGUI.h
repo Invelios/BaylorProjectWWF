@@ -1,4 +1,4 @@
-#ifndef LOGINMENUGUI_H
+/*#ifndef LOGINMENUGUI_H
 #define LOGINMENUGUI_H
 #include <iostream>
 #include <string>
@@ -10,7 +10,7 @@ using namespace std;
 
 string loginScreenLoop()
 {
-  /*//While the user hasn't quit
+  //While the user hasn't quit
     while( quit == false && !(nameEntered == true && passEntered == true))
     {
       if(state == 0)
@@ -109,8 +109,8 @@ string loginScreenLoop()
     SDL_FreeSurface(requestName);
     SDL_FreeSurface(requestPass);
     SDL_FreeSurface(incorrectCombo);
-    return name.getStr();*/
+    return name.getStr();
     return "lol";
 }
 
-#endif
+#endif*/

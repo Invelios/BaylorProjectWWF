@@ -5,13 +5,15 @@
 #include "SDL_ttf.h"
 #include "SDL_mixer.h"
 #include <string>
-#include "GameState.h"
+//#include "GameState.h"
 #include "Setup.h"
 #include "GameBoard.h"
 #include <vector>
 #include <set>
 
 using namespace std;
+
+
 
 class GameGUI;
 class GameBoard;

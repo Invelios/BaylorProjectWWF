@@ -18,6 +18,8 @@
 
 using namespace std;
 
+class Networking;
+
 struct gameInfo
 {
     int theGameId;
@@ -30,12 +32,12 @@ class MenuLogic
 {
     private:
 
-    Networking theNetworkStream;
+    Networking theNetworkStream();
     set<GameBoard> theGameBoardSet;
 
     public:
 
-    vector<gameInfo> getUsersGames(string theUser);
+      vector<gameInfo> getUsersGames(string theUser){vector<gameInfo> bob; return bob;}
 
 };
 

@@ -5,7 +5,7 @@
 #include "SDL_ttf.h"
 #include "SDL_mixer.h"
 #include <string>
-#include "GameState.h"
+//#include "GameState.h"
 #include "Setup.h"
 #include "GameBoard.h"
 #include "MenuLogic.h"
@@ -45,7 +45,10 @@ class MenuGUI
   vector<GameIcon> theGameSet;
   MenuGUI();
   MenuLogic * theLogic;
+public:
+  MenuGUI(string userName);
   void createGameIcon(gameInfo aGameInfo, int aGameNumber);
+  int run();
 };
 
 MenuGUI::MenuGUI(string userName)
@@ -59,6 +62,12 @@ MenuGUI::MenuGUI(string userName)
 
 void MenuGUI::createGameIcon(gameInfo aGameInfo, int aGameNumber)
 {
-  theGameSet.push(aGameInfo, aGameNumber);
+  theGameSet.push_back(GameIcon(aGameInfo, aGameNumber));
+}
+
+int MenuGUI::run()
+{
+
+  return 4;
 }
 #endif

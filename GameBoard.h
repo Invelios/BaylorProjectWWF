@@ -14,6 +14,7 @@
 #include <string>
 #include <sstream>
 #include <deque>
+#include <ctime>
 #include "Setup.h"
 #include <set>
 #include "Permutations.h"
@@ -161,7 +162,7 @@ public:
     void update();
     vector<int> emptyTilesInRow(int theRow);
     vector<int> emptyTilesInColumn(int theColumn);
-    void updateDeck();
+    void updateDeck(int theDeckNumber);
     char draw();
 
     vector<pair<int,int> > cheat();
@@ -288,7 +289,12 @@ char GameBoard::draw()
 
     int tileToDraw = rand() % squareBag.size();
 
-    multiset<char>::iterator theIterator = squareBag.begin() + tileToDraw;
+    multiset<char>::iterator theIterator = squareBag.begin();
+
+    for(int i = 0; i < tileToDraw; i++)
+    {
+        theIterator++;
+    }
 
     char theCharacter = *theIterator;
 
@@ -678,13 +684,13 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
 
                     GameBoard testingGameBoard(toString()); // Copy the current board
 
-                    for(int l = 0; l <= theEmptyTilesInThisRow.size() - theCurrentPermutation.size(); l++)
+                    for(int l = 0; l <= theEmptyTilesInThisColumn.size() - theCurrentPermutation.size(); l++)
                     {
 
                         for(int m = 0; m < theCurrentPermutation.size(); m++)
                         {
                                 testingGameBoard.placeSquare( i, theEmptyTilesInThisColumn[m + l], thisPlayersDeck[theCurrentPermutation[m]]);
-                                Move aMove(theCurrentPermutation, i, theEmptyTilesInThisColumn[m + 1]);
+                                Move aMove(theCurrentPermutation[m], i, theEmptyTilesInThisColumn[m + 1]);
                                 theMoves.push_back(aMove);
                         }
 

@@ -10,35 +10,90 @@
 #define MENULOGIC_H_INCLUDED
 
 #include "Networking.h"
-#include "GUI.h"
 #include <string>
 #include <set>
 #include <vector>
-// #include <GameBoard>
 
 using namespace std;
 
 class Networking;
 
-struct gameInfo
+struct GameInfo
 {
+public:
     int theGameId;
     bool isThePlayersTurn;
     string theOpponetsName;
-    GameBoard *theGameBoard;
 };
 
 class MenuLogic
 {
-    private:
+private:
+    Networking * theNetworkStream;
+    set<GameInfo> theGameInfoSet;
 
-    Networking theNetworkStream();
-    set<GameBoard> theGameBoardSet;
-
-    public:
-
-    vector<gameInfo> getUsersGames(string theUser){vector<gameInfo> bob; return bob;}
+public:
+  MenuLogic(){theNetworkStream = Networking::getInstance();}
+      vector<GameInfo> getUsersGames(string theUser);
 
 };
+
+vector<GameInfo> MenuLogic::getUsersGames(string theUser)
+{
+    vector<int> theActiveGameIDs( theNetworkStream->getActiveGameID(theUser) );
+    vector<GameInfo> theGameInfoVector;
+
+    for( int i = 0; i < theActiveGameIDs.size(); i++ )
+    {
+        string aGameObject =  theNetworkStream->getGame(theActiveGameIDs[i] );
+        GameInfo aGameInfo;
+
+        string tempString;
+        string tmpStr;
+
+          int s = 0;
+
+          for(; aGameObject[s] != '\n'; s++)
+          {
+              tempString += aGameObject[s];
+          }
+
+          aGameInfo.theGameId = atoi(tempString.c_str());
+
+          tempString.clear();
+
+          s++;
+
+          for(; aGameObject[s] != '\n'; s++)
+          {
+            tempString += aGameObject[s];
+          }
+          tmpStr = tempString;
+
+          s++;
+
+          for(; aGameObject[s] != '\n'; s++)
+          {
+            tempString += aGameObject[s];
+          }
+
+          aGameInfo.theOpponetsName = tempString;
+
+          if(tempString == tmpStr)
+          {
+              aGameInfo.isThePlayersTurn = false;
+          }
+          else
+          {
+              aGameInfo.isThePlayersTurn = true;
+          }
+
+        theGameInfoVector.push_back(aGameInfo);
+    }
+
+    return theGameInfoVector;
+
+}
+
 
 #endif // MENULOGIC_H_INCLUDED

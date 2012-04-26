@@ -122,7 +122,7 @@ class GameBoard
         char baseValue;
 
         public:
-        class Square()
+        Square()
         {
             //coord.first = 0;
             //coord.second = 0;
@@ -132,12 +132,17 @@ class GameBoard
         }
     };
     multiset<char> squareBag;
+    int score1; //creator
+    int score2; //opponent
     Square theGameBoard[BOARD_LENGTH][BOARD_LENGTH];
     char deck1[DECK_SIZE], deck2[DECK_SIZE];
-    set<pair<int, int>> activeSpots;
+    set<pair<int, int> > activeSpots;
     string creator; //which player made it?
+    string opponet;
+    int creatorScore;
+    int opponentScore;
     string turn; //whose turn is it?
-    int gameID;
+    string userName;
 
     /*
     baseValue:
@@ -150,6 +155,8 @@ class GameBoard
     */
 
 public:
+  int gameID;
+  bool firstMove;
     GameBoard(); // new game
     GameBoard(string boardString);// retrieving existing game
     void initialize();
@@ -158,8 +165,8 @@ public:
     bool placeDeckSquare(int x, char givenValue);
     bool removeSquare(pair<int, int> givenPair);
     bool removeDeckSquare(int x);
-    string GameBoard::toString();
-    vector<string> GameBoard::constructStrings(bool orientation, int &points);
+    string toString();
+    vector<string> constructStrings(bool orientation, int &points);
     void update();
     vector<int> emptyTilesInRow(int theRow);
     vector<int> emptyTilesInColumn(int theColumn);
@@ -170,7 +177,7 @@ public:
 
     //Return integer for multiple failure cases.
     int verifyPlay();
-    bool checkSpots(set<pair<int, int>>::iterator it);
+    bool checkSpots(set<pair<int, int> >::iterator it);
 
     //verifyWord
     //Returns true or false if word is within the dictionary, takes in string.
@@ -190,6 +197,7 @@ public:
 
 GameBoard::GameBoard() // new game
 {
+  firstMove = true;
   initialize();
 }
 
@@ -200,6 +208,7 @@ GameBoard::GameBoard(string boardString) // retrieving existing game
 
 void GameBoard::initialize()
 {
+  creatorScore = opponentScore = 0;
   char temp, tempSquare, tempBase;
   ifstream inputFile;
   inputFile.open(NEW_FILE_NAME.c_str());
@@ -233,6 +242,7 @@ void GameBoard::initialize()
   }
   creator = USER_NAME;
   inputFile.close();
+  //updateDeck(1);
 }
 
 bool GameBoard::placeSquare(int x, int y, char givenValue)
@@ -339,7 +349,7 @@ int GameBoard::verifyPlay()
   //checking for same row or column
   bool straightLine = true;
   int val;
-  set<pair<int, int>>::iterator it = activeSpots.begin();
+  set<pair<int, int> >::iterator it = activeSpots.begin();
   if(activeSpots.size() > 0)
   {
     val = (*it).first;
@@ -374,13 +384,16 @@ int GameBoard::verifyPlay()
 
   bool connected = true;
   it = activeSpots.begin();
-  /*for(; it != activeSpots.end(); it++)
+  if(firstMove)
   {
-    if(!checkSpots(it))
+    for(; it != activeSpots.end(); it++)
     {
-      connected = false;
+      if(!checkSpots(it))
+      {
+        connected = false;
+      }
     }
-  }*/
+  }
 
   if(!connected)
   {
@@ -400,6 +413,10 @@ int GameBoard::verifyPlay()
   }
   if(validWords)
   {
+    if(userName == creator)
+        creatorScore += points;
+    else
+        opponentScore += points;
     return points;
   }
   else
@@ -408,7 +425,7 @@ int GameBoard::verifyPlay()
   }
 }
 
-bool GameBoard::checkSpots(set<pair<int, int>>::iterator it)
+bool GameBoard::checkSpots(set<pair<int, int> >::iterator it)
 {
   bool valid = false;
   if(!theGameBoard[(*it).first + 1][(*it).second].active && theGameBoard[(*it).first + 1][(*it).second].SquareValue != '-')
@@ -433,7 +450,7 @@ bool GameBoard::checkSpots(set<pair<int, int>>::iterator it)
 string GameBoard::toString()//Square** theGameBoard, char deck1[], char deck2[])
 {
   stringstream stringOut;
-  stringOut << gameID << '\n' << creator << '\n';
+  stringOut << gameID << '\n' << creator << '\n' << opponet << '\n';
   for(int i = 0; i < BOARD_LENGTH; i++)
   {
       for(int j = 0; j < BOARD_LENGTH; j++)
@@ -457,52 +474,50 @@ string GameBoard::toString()//Square** theGameBoard, char deck1[], char deck2[])
 
   stringOut << '\n';
 
+  stringOut << creatorScore << endl << opponentScore;
+
+  stringOut << '\n';
+
   return stringOut.str();
-    /*ofstream outputFile;
-    outputFile.open(EXISTING_FILE_NAME.c_str());
-    outputFile.clear();
-    for(int i = 0; i < BOARD_LENGTH; i++)
-    {
-        for(int j = 0; j < BOARD_LENGTH; j++)
-        {
-            outputFile << theGameBoard[i][j].SquareValue;
-            outputFile << theGameBoard[i][j].baseValue;
-        }
-        outputFile << '\n';
-    }
-    for(int i = 0; i < DECK_SIZE; i++)
-        outputFile << deck1[i];
-    outputFile << '\n';
-    for(int i = 0; i < DECK_SIZE; i++)
-        outputFile << deck2[i];
-    for(int i = 0; i < ALPHABET_SIZE; i++)
-    {
-        outputFile << squareBag[i].first << ' ' << squareBag[i].second << ' ';
-    }
-    */
 }
 
 void GameBoard::retrieveGame(string boardString)
 {
   char temp, tempSquare, tempBase;
-  string tempCreator;
+  string tempString;
+
   int s = 0;
-  string tmpGameID;
 
   for(; boardString[s] != '\n'; s++)
   {
-      tmpGameID += boardString[s];
+      tempString += boardString[s];
   }
+
+  gameID = atoi(tempString.c_str());
+
+  tempString.clear();
 
   s++;
 
   for(; boardString[s] != '\n'; s++)
   {
-    tempCreator += boardString[s];
+    tempString += boardString[s];
   }
-  creator = tempCreator;
+  creator = tempString;
 
   s++;
+
+  tempString.clear();
+
+  for(; boardString[s] != '\n'; s++)
+  {
+    tempString += boardString[s];
+  }
+  opponet = tempString;
+
+  s++;
+
+  tempString.clear();
 
   for(int i = 0; i < BOARD_LENGTH; i++)
   {
@@ -531,6 +546,26 @@ void GameBoard::retrieveGame(string boardString)
       s++;
   }
 
+  tempString.clear();
+
+  for(; boardString[s] != '\n'; s++)
+  {
+      tempString = boardString[s];
+  }
+
+  creatorScore = atoi(tempString.c_str());
+  
+  s++;
+
+  tempString.clear();
+
+  for(; boardString[s] != '\n'; s++)
+  {
+      tempString = boardString[s];
+  }
+
+  opponentScore = atoi(tempString.c_str());
+
     /*ifstream inputFile;
 
     if(inputFile.open(EXISTING_FILE_NAME))
@@ -539,7 +574,6 @@ void GameBoard::retrieveGame(string boardString)
 
     return;
 }
-
 // Needed for Cheat Function
 // Adapted from bruteForce powerSet Assignment
 

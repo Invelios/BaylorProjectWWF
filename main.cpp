@@ -2,6 +2,7 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include "SDL_mixer.h"
+#include "Networking.h"
 #include <string>
 #include <vector>
 //#include "GameState.h"
@@ -9,6 +10,8 @@
 #include "Setup.h"
 #include "FirstMenuGUI.h"
 #include "Timer.h"
+#include "MenuGUI.h"
+#include "MenuLogic.h"
 
 using namespace std;
 
@@ -33,20 +36,12 @@ int main( int argc, char* args[] )
   int state = 0;
   set_clips();
 
-  GameGUI theGame;
-  //MenuGUI theMenuGUI;
-  theGame.CreateGUITile('f');
-  theGame.CreateGUITile('r');
-  theGame.CreateGUITile('i');
-  theGame.CreateGUITile('e');
-  theGame.CreateGUITile('n');
-  theGame.CreateGUITile('d');
-  theGame.CreateGUITile('s');
   LoginState theLoginState;
   NewProfileState theNewProfileState;
-  DisplayGamesState theDisplayGamesState;
+  NewGameState * theNewGameState = NULL;
   MenuGUI * theMenuGUI = NULL;
   string userName;
+  GameGUI * theGame = NULL;
 
   //Keep track of the frame count
 
@@ -70,7 +65,7 @@ int main( int argc, char* args[] )
     
     //Start the frame timer
     fpsCalc.start();
-
+    userName = "BOB";
   //game loop
   while(!quit/*stateID != STATE_EXIT*/)
   {
@@ -81,28 +76,40 @@ int main( int argc, char* args[] )
     case 0: state = mainMenuState(); break;
     case 1: state = theLoginState.run(); break;
     case 2: state = theNewProfileState.run(); break;
-    case 3: state = theDisplayGamesState.run(); break;
-    case 4: if(theMenuGUI == NULL)
+    case 3: if(theMenuGUI == NULL)
             {
+              userName = theLoginState.name.getStr();
               theMenuGUI = new MenuGUI(userName);
             }
-            theMenuGUI->run();
+            state = theMenuGUI->run();
             break;
+    case 4: if(theNewGameState == NULL) //new game
+            {
+              theNewGameState = new NewGameState();
+              theNewGameState->theGameGUI->CreateGUITile('f');
+              theNewGameState->theGameGUI->CreateGUITile('r');
+              theNewGameState->theGameGUI->CreateGUITile('i');
+              theNewGameState->theGameGUI->CreateGUITile('e');
+              theNewGameState->theGameGUI->CreateGUITile('n');
+              theNewGameState->theGameGUI->CreateGUITile('d');
+              theNewGameState->theGameGUI->CreateGUITile('s');
+            }
+            state = theNewGameState->run(); break;
+    case 5: theGame = new GameGUI(theMenuGUI->mainGameId); //load existing game
+            theGame->run(); break;
+    case 6: state = theNewGameState->run(); //actually playing the game
     }
 
-    theGame.theGameBoard->cheat(true);
+    //theGame.theGameBoard->cheat(true);
 
     while(SDL_PollEvent(&event)) 
     { 
-      theGame.handle_events();
+
       if( event.type == SDL_QUIT )
       {
         quit = true;
       } 
     }
-
-    apply_surface(0, 0, background, screen);
-    theGame.show();
         
     //Update the screen
     if( SDL_Flip( screen ) == -1 )

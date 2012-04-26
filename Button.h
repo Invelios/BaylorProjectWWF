@@ -8,7 +8,7 @@ using namespace std;
 
 class Button
 {
-    private:
+public:
     //The attributes of the button
     SDL_Rect box;
     

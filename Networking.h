@@ -9,20 +9,33 @@
 #define NETWORKING_H_INCLUDED
 
 #include "GameBoard.h"
-#include "MenuLogic.h"
 #include "Wwf.h"
 #include <vector>
 #include <string>
 
 using namespace std;
 
+//wwfstream thenet;
+
 class Networking
 {
     private:
-
+    static Networking * instance;
     wwfstream net;
+    Networking(){}
+    /* public:
+       static Singleton* getInstance( );
+       ~Singleton( );
+   private:
+       Singleton( );
+       static Singleton* instance;*/
 
     public:
+      wwfstream theNet;
+    static Networking * getInstance()
+    {
+      return instance;
+    }
 
     bool createAccount(string user, string pass, string email);
 
@@ -46,10 +59,39 @@ class Networking
 
 };
 
+Networking * Networking::instance = new Networking();
+/*class Log {
+  public:
+    static Log* Inst(char* filename);
+    void Logging(string message);
+    void Initialize();
+    ~Log();
+  protected:
+    Log(); // constructor
+  private:
+    static Log* pInstance;
+};
+
+We declare an Inst() function, which will return our static Log class pointer. We have an instance called pInstance, which is our static pointer to our class. As well as the constructor and other functions.
+C++ Singleton File
+
+The cpp file (C++ file) below:
+Log* Log::pInstance = NULL;
+
+Log* Log::Inst(char* filename){
+  if(pInstance == NULL){
+    pInstance = new Log(filename);
+  }
+  return pInstance;
+}
+
+Log::Log(){ // constructor
+  Initialize(); // you can ignore this function
+}*/
 //************************************************************
 // Desription: Communicated with the server to create an account
 // Return: bool
-// Pre: Networking was constructed
+// Pre: networking was constructed
 // Post:
 //************************************************************
 
@@ -69,7 +111,7 @@ bool Networking::createAccount(string user, string pass, string email)
 //************************************************************
 // Desription: Gets all users from the server
 // Return: vector<string>
-// Pre: Networking object constructed
+// Pre: networking object constructed
 // Post:
 //************************************************************
 
@@ -90,7 +132,7 @@ vector<string> Networking::getAllUsers()
 //************************************************************
 // Desription: Verifys that the user/pass combo is a valid combo on the server
 // Return: bool
-// Pre: Networking Object constructed
+// Pre: networking Object constructed
 // Post:
 //************************************************************
 
@@ -110,7 +152,7 @@ bool Networking::login(string user, string pass)
 //************************************************************
 // Desription: Tells server to change a users password
 // Return: bool
-// Pre: Networking Object Constructed
+// Pre: networking Object Constructed
 // Post:
 //************************************************************
 
@@ -130,7 +172,7 @@ bool Networking::changePassword(string user, string oldPass, string newPass)
 //************************************************************
 // Desription: creates a game between 2 users
 // Return: bool
-// Pre: Networking Object Constructed
+// Pre: networking Object Constructed
 // Post:
 //************************************************************
 
@@ -150,7 +192,7 @@ bool Networking::createGame(string user1, string user2)
 //************************************************************
 // Desription: Will get all gameIDs from the server for a user
 // Return: vector<int>
-// Pre: Networking Object Constructed
+// Pre: networking Object Constructed
 // Post:
 //************************************************************
 
@@ -174,7 +216,7 @@ vector<int> Networking::getAllGameID(string user)
 //************************************************************
 // Desription: Get active gameIDs from the server for a user
 // Return: vector<int>
-// Pre: Networking Object Constructed
+// Pre: networking Object Constructed
 // Post:
 //************************************************************
 
@@ -198,7 +240,7 @@ vector<int> Networking::getActiveGameID(string user)
 //************************************************************
 // Desription: Will set the game status as ACTIVE or INACTIVE
 // Return: bool
-// Pre: Networking object constructed
+// Pre: networking object constructed
 // Post:
 //************************************************************
 
@@ -225,7 +267,7 @@ bool Networking::setGameStatus(int gameID, bool status)
 //************************************************************
 // Desription: Will get the string to construct the game for the given gameID
 // Return: string
-// Pre: Networking Object constructed
+// Pre: networking Object constructed
 // Post:
 //************************************************************
 
@@ -242,7 +284,7 @@ string Networking::getGame(int gameID)
 //************************************************************
 // Desription: Updates the games' string representation on the server
 // Return: bool
-// Pre: Networking Object Constructed
+// Pre: networking Object Constructed
 // Post:
 //************************************************************
 

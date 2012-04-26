@@ -8,6 +8,7 @@
 //#include "GameState.h"
 #include "Setup.h"
 #include "GameBoard.h"
+#include "Networking.h"
 #include <vector>
 #include <set>
 
@@ -39,9 +40,11 @@ public:
   vector<GUITile> allGUITiles;
   GoButton * theButton;
   GameGUI();
+  GameGUI(int gameID);
   void CreateGUITile(char letter);
   void handle_events();
   void show();
+  int run();
 };
 
 //const SDL_Rect GameGUI::goButton = {384, 544, 64, 32};
@@ -87,6 +90,22 @@ GameGUI::GameGUI()
   theButton = new GoButton(this);
 };
 
+GameGUI::GameGUI(int gameID)
+{
+  Networking * network = Networking::getInstance();
+  string boardString = network->getGame(gameID);
+  theGameBoard = new GameBoard(boardString);
+  theButton = new GoButton(this);
+}
+
+int GameGUI::run()
+{
+  handle_events();
+
+  apply_surface(0, 0, background, screen);
+  show();
+  return 0;
+}
 
 void GameGUI::CreateGUITile(char letter)
 {
@@ -308,8 +327,16 @@ void GoButton::handle_events()
         {
             pressed = false;
             resetImage();
-            int blah = theGUI->theGameBoard->verifyPlay();
-            int j = 45;
+            int points = theGUI->theGameBoard->verifyPlay();
+            if(points > 0)
+            {
+              Networking * tempNet = Networking::getInstance();
+              tempNet->updateGame(theGUI->theGameBoard->gameID, theGUI->theGameBoard->toString());
+              if(theGUI->theGameBoard->firstMove)
+              {
+                theGUI->theGameBoard->firstMove = false;
+              }
+            }
             //GO GO GO!
         }
     }
@@ -333,6 +360,7 @@ void GoButton::show()
 
 void GameGUI::show()
 {
+  apply_surface(0, 0, background, screen);
   for(int i = 0; i < allGUITiles.size(); i++)
   {
     allGUITiles[i].show();

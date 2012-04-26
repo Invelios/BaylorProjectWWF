@@ -58,6 +58,10 @@ void set_clips()
     menuClips[i].w = 224;
     menuClips[i].h = 48;
   }
+  menuClips[9].x = 0;
+  menuClips[9].y = 448;
+  menuClips[9].w = 32;
+  menuClips[9].h = 32;
 }
 
 bool init()
@@ -112,7 +116,7 @@ bool load_files()
     }
 
     //Open the font
-    font = TTF_OpenFont( "arialbd.ttf", 30 );
+    font = TTF_OpenFont( "arialbd.ttf", 16 );
 
     //If there was an error in loading the font
     if( font == NULL )

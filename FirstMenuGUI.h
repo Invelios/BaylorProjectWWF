@@ -11,8 +11,6 @@
 
 using namespace std;
 
-Networking theNetwork;
-
 int mainMenuState()
 {
   SDL_Surface * loginBackground = load_image("loginbackground.png");
@@ -37,14 +35,6 @@ int mainMenuState()
   loginButton.show();
   return 0;
 }
-
-class DisplayGamesState
-{
-
-public:
-  DisplayGamesState(){}
-  int run(){return 3;}
-};
 
 class NewProfileState
 {
@@ -95,7 +85,7 @@ public:
 
   int run()
   {
-
+    Networking * theNetwork = Networking::getInstance();
     if(state == 0)
     {
       //While there's events to handle
@@ -170,7 +160,7 @@ public:
               {
                   //Change the flag
                   emailEntered = true;
-                  goodAccount = theNetwork.createAccount(name.getStr(), password.getStr(), email.getStr());
+                  goodAccount = theNetwork->createAccount(name.getStr(), password.getStr(), email.getStr());
                   if(goodAccount == false)
                   {
                     passEntered = false;
@@ -213,8 +203,6 @@ class LoginState
   bool state; //0 = username, 1 = password
   bool incorrect; //1 to notify user of incorrect password
   bool goodPass; //1 for no error, 0 for error
-  StringInput name;
-  StringInput password;
 
   SDL_Surface * requestName;
   SDL_Surface * loginBackground;
@@ -222,6 +210,9 @@ class LoginState
   SDL_Surface * incorrectCombo;
 
 public:
+
+  StringInput name;
+  StringInput password;
   string getPass()
   {
     return password.getStr();
@@ -247,7 +238,7 @@ public:
 
   int run()
   {
-
+    Networking * theNetwork = Networking::getInstance();
     if(state == 0)
     {
       //While there's events to handle
@@ -293,7 +284,7 @@ public:
               {
                   //Change the flag
                   passEntered = true;
-                  goodPass = theNetwork.login(name.getStr(), password.getStr());
+                  goodPass = theNetwork->login(name.getStr(), password.getStr());
                   if(goodPass == false)
                   {
                     passEntered = false;
@@ -305,7 +296,7 @@ public:
                   }
                   else
                   {
-                    return 4;
+                    return 3;
                   }
               }
           }

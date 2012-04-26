@@ -24,6 +24,8 @@ class Networking
 
     public:
 
+    Networking(){}
+
     bool createAccount(string user, string pass, string email);
 
     vector<string> getAllUsers();

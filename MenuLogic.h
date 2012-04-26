@@ -14,30 +14,26 @@
 #include <string>
 #include <set>
 #include <vector>
-// #include <GameBoard>
 
 using namespace std;
 
-class Networking;
-
-struct gameInfo
+struct GameInfo
 {
     int theGameId;
     bool isThePlayersTurn;
     string theOpponetsName;
-    GameBoard *theGameBoard;
 };
 
 class MenuLogic
 {
     private:
 
-    Networking theNetworkStream();
-    set<GameBoard> theGameBoardSet;
+    Networking theNetworkStream;
+    set<GameInfo> theGameInfoSet;
 
     public:
 
-      vector<gameInfo> getUsersGames(string theUser){vector<gameInfo> bob; return bob;}
+      vector<GameInfo> getUsersGames(string theUser);
 
 };
 

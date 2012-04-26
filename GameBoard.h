@@ -122,7 +122,7 @@ class GameBoard
         char baseValue;
 
         public:
-        class Square()
+        Square()
         {
             //coord.first = 0;
             //coord.second = 0;
@@ -134,8 +134,9 @@ class GameBoard
     multiset<char> squareBag;
     Square theGameBoard[BOARD_LENGTH][BOARD_LENGTH];
     char deck1[DECK_SIZE], deck2[DECK_SIZE];
-    set<pair<int, int>> activeSpots;
+    set<pair<int, int> > activeSpots;
     string creator; //which player made it?
+    string opponet;
     string turn; //whose turn is it?
     int gameID;
 
@@ -158,8 +159,8 @@ public:
     bool placeDeckSquare(int x, char givenValue);
     bool removeSquare(pair<int, int> givenPair);
     bool removeDeckSquare(int x);
-    string GameBoard::toString();
-    vector<string> GameBoard::constructStrings(bool orientation, int &points);
+    string toString();
+    vector<string> constructStrings(bool orientation, int &points);
     void update();
     vector<int> emptyTilesInRow(int theRow);
     vector<int> emptyTilesInColumn(int theColumn);
@@ -170,7 +171,7 @@ public:
 
     //Return integer for multiple failure cases.
     int verifyPlay();
-    bool checkSpots(set<pair<int, int>>::iterator it);
+    bool checkSpots(set<pair<int, int> >::iterator it);
 
     //verifyWord
     //Returns true or false if word is within the dictionary, takes in string.
@@ -339,7 +340,7 @@ int GameBoard::verifyPlay()
   //checking for same row or column
   bool straightLine = true;
   int val;
-  set<pair<int, int>>::iterator it = activeSpots.begin();
+  set<pair<int, int> >::iterator it = activeSpots.begin();
   if(activeSpots.size() > 0)
   {
     val = (*it).first;
@@ -408,7 +409,7 @@ int GameBoard::verifyPlay()
   }
 }
 
-bool GameBoard::checkSpots(set<pair<int, int>>::iterator it)
+bool GameBoard::checkSpots(set<pair<int, int> >::iterator it)
 {
   bool valid = false;
   if(!theGameBoard[(*it).first + 1][(*it).second].active && theGameBoard[(*it).first + 1][(*it).second].SquareValue != '-')
@@ -433,7 +434,7 @@ bool GameBoard::checkSpots(set<pair<int, int>>::iterator it)
 string GameBoard::toString()//Square** theGameBoard, char deck1[], char deck2[])
 {
   stringstream stringOut;
-  stringOut << gameID << '\n' << creator << '\n';
+  stringOut << gameID << '\n' << creator << '\n' << opponet << '\n';
   for(int i = 0; i < BOARD_LENGTH; i++)
   {
       for(int j = 0; j < BOARD_LENGTH; j++)
@@ -485,22 +486,33 @@ string GameBoard::toString()//Square** theGameBoard, char deck1[], char deck2[])
 void GameBoard::retrieveGame(string boardString)
 {
   char temp, tempSquare, tempBase;
-  string tempCreator = 0;
+  string tempString;
   int s = 0;
-  string tmpGameID;
 
   for(; boardString[s] != '\n'; s++)
   {
-      tmpGameID += boardString[s];
+      tempString += boardString[s];
   }
+
+  gameID = atoi(tempString.c_str());
+
+  tempString.clear();
 
   s++;
 
   for(; boardString[s] != '\n'; s++)
   {
-    tempCreator += boardString[s];
+    tempString += boardString[s];
   }
-  creator = tempCreator;
+  creator = tempString;
+
+  s++;
+
+  for(; boardString[s] != '\n'; s++)
+  {
+    tempString += boardString[s];
+  }
+  opponet = tempString;
 
   s++;
 

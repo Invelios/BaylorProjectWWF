@@ -21,7 +21,6 @@ private:
     SDL_Rect box;
     gameInfo theGameInfo;
     int theGameNumber;
-
     //The part of the button sprite sheet that will be shown
     SDL_Rect* clip;
     
@@ -37,14 +36,19 @@ GameIcon::GameIcon(gameInfo aGameInfo, int aGameNumber)
 {
   theGameInfo = aGameInfo;
   theGameNumber = aGameNumber;
-  SDL_Rect* clip;
+  SDL_Rect* clip = &menuClips[aGameNumber % 5];
+  box.x = 64 + 224 * (aGameNumber / 12);
+  box.y = 48 * (aGameNumber % 12);
+  box.w = clip->w;
+  box.h = clip->h;
 }
 
 class MenuGUI
 {
-  vector<GameIcon> theGameSet;
+  vector<GameIcon> theGameIconSet;
   MenuGUI();
   MenuLogic * theLogic;
+  int numberOfGames;
 public:
   MenuGUI(string userName);
   void createGameIcon(gameInfo aGameInfo, int aGameNumber);
@@ -62,7 +66,7 @@ MenuGUI::MenuGUI(string userName)
 
 void MenuGUI::createGameIcon(gameInfo aGameInfo, int aGameNumber)
 {
-  theGameSet.push_back(GameIcon(aGameInfo, aGameNumber));
+  theGameIconSet.push_back(GameIcon(aGameInfo, aGameNumber));
 }
 
 int MenuGUI::run()

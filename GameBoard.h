@@ -485,7 +485,7 @@ string GameBoard::toString()//Square** theGameBoard, char deck1[], char deck2[])
 void GameBoard::retrieveGame(string boardString)
 {
   char temp, tempSquare, tempBase;
-  string tempCreator = 0;
+  string tempCreator;
   int s = 0;
   string tmpGameID;
 

@@ -76,7 +76,7 @@ int main( int argc, char* args[] )
   {
     //Start the frame timer
         fpsReg.start();
-    /*switch (state)
+    switch (state)
     {
     case 0: state = mainMenuState(); break;
     case 1: state = theLoginState.run(); break;
@@ -88,7 +88,7 @@ int main( int argc, char* args[] )
             }
             theMenuGUI->run();
             break;
-    }*/
+    }
 
     theGame.theGameBoard->cheat(true);
 

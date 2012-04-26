@@ -37,7 +37,7 @@ class MenuLogic
 
     public:
 
-      vector<gameInfo> getUsersGames(string theUser){vector<gameInfo> bob; return bob;}
+    vector<gameInfo> getUsersGames(string theUser){vector<gameInfo> bob; return bob;}
 
 };
 

@@ -11,6 +11,13 @@
 
 using namespace std;
 
+//************************************************************
+// Desription: Loads the Dictionary from a file
+// Return: bool success
+// Pre: Dictionary was constructed
+// Post: Word Set will contain all words in the file
+//************************************************************
+
 bool Dictionary::loadFile(string filename)
 {
     bool success = false;
@@ -34,12 +41,19 @@ bool Dictionary::loadFile(string filename)
     return success;
 }
 
+//************************************************************
+// Desription: Will tell weather the input string is in the dictionary
+// Return: bool
+// Pre: The dictionary has been loaded
+// Post: No change to dictionary
+//************************************************************
+
 bool Dictionary::verifyWord(string w)
 {
     bool found = true;
     if(words.count(w) == 0)
     {
-        found = true;
+        found = false;
     }
 
     return found;

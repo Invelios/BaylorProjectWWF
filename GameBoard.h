@@ -479,24 +479,6 @@ vector< vector<int> > powerSet(vector <int> inS)
 
     for(int i = 0; i < bytes; i++)
     {
-        set<char> curS;
-
-        for(int j = 0; j < inS.size(); j++)
-        {
-
-            if((i >> j) % 2 == 1)
-            {
-                curS.insert(stringIn[j]);
-            }
-        }
-
-        answer.insert(curS);
-    }
-
-    return answer;
-}
-    for(int i = 0; i < bytes; i++)
-    {
         vector<int> curS;
 
         for(int j = 0; j < inS.size(); j++)
@@ -1041,7 +1023,7 @@ vector<string> GameBoard::constructStrings(bool orientation, int &points)//horiz
       wordPoints = 0;
     }
   }
-  
+
   /*
   vector<deque<char> > strings;
   set<pair<int, int> >::iterator it = activeSpots.begin();

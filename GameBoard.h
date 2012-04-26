@@ -137,6 +137,7 @@ class GameBoard
     set<pair<int, int>> activeSpots;
     string creator; //which player made it?
     string turn; //whose turn is it?
+    int gameID;
 
     /*
     baseValue:
@@ -432,7 +433,7 @@ bool GameBoard::checkSpots(set<pair<int, int>>::iterator it)
 string GameBoard::toString()//Square** theGameBoard, char deck1[], char deck2[])
 {
   stringstream stringOut;
-  stringOut << creator << endl;
+  stringOut << gameID << '\n' << creator << '\n';
   for(int i = 0; i < BOARD_LENGTH; i++)
   {
       for(int j = 0; j < BOARD_LENGTH; j++)
@@ -447,11 +448,14 @@ string GameBoard::toString()//Square** theGameBoard, char deck1[], char deck2[])
  // stringOut << '\n';
   for(int i = 0; i < DECK_SIZE; i++)
       stringOut << deck2[i];
+
   multiset<char>::iterator it;
   for(it = squareBag.begin(); it != squareBag.end(); it++)
   {
       stringOut << (*it);
   }
+
+  stringOut << '\n';
 
   return stringOut.str();
     /*ofstream outputFile;
@@ -483,11 +487,22 @@ void GameBoard::retrieveGame(string boardString)
   char temp, tempSquare, tempBase;
   string tempCreator = 0;
   int s = 0;
+  string tmpGameID;
+
+  for(; boardString[s] != '\n'; s++)
+  {
+      tmpGameID += boardString[s];
+  }
+
+  s++;
+
   for(; boardString[s] != '\n'; s++)
   {
     tempCreator += boardString[s];
   }
   creator = tempCreator;
+
+  s++;
 
   for(int i = 0; i < BOARD_LENGTH; i++)
   {
@@ -509,7 +524,8 @@ void GameBoard::retrieveGame(string boardString)
       deck2[i] = boardString[s];
       s++;
   }
-  while(s < boardString.size())
+
+  while(boardString[s] != '\n')
   {
       squareBag.insert(boardString[s]);
       s++;
@@ -520,6 +536,8 @@ void GameBoard::retrieveGame(string boardString)
     if(inputFile.open(EXISTING_FILE_NAME))
         initialize(EXISTING_FILE_NAME);
     inputFile.close();*/
+
+    return;
 }
 
 // Needed for Cheat Function
@@ -651,7 +669,7 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
                                 theMoves.push_back(aMove);
                         }
 
- 
+
                     int thisMovesScore = testingGameBoard.verifyPlay();           // FNIY needs to be the functions that returns the score of the move
 
                         if(thisMovesScore > 0)
@@ -694,7 +712,7 @@ vector< MoveMapping > GameBoard::cheat(bool thePlayerIsFirst)
                                 theMoves.push_back(aMove);
                         }
 
-            
+
                     int thisMovesScore = testingGameBoard.verifyPlay();           // FNIY needs to be the functions that returns the score of the move
 
                         if(thisMovesScore > 0)

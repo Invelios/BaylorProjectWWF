@@ -31,7 +31,8 @@ bool Dictionary::loadFile(string filename)
 
         while(dataFile >> reader)
         {
-            words.insert(reader);
+            if(reader.size() <= 15)
+                words.insert(reader);
         }
     }
 
